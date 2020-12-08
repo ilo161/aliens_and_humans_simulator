@@ -36,8 +36,5 @@
     "> 1%",
     "maintained node versions",
     "not dead"
-  ],
-  "dependencies": {
-    "browserify": "^17.0.0"
-  }
+  ]
 }
