@@ -12,31 +12,29 @@
 </head>
 
 <body>
-    <div class="images">
-
-    </div>
     
-    
-    <div class="canvas-container flex-row-start" >
-        <div class="gamebox flex-row-start">
+    <!-- <div class="canvas-container" > -->
+        <div class="gamebox">
             <canvas id="canvas-home" height='505px' width='646px'></canvas>
-            
-            <div class="drop-down-container">
-                <select id="civilization-menu">
-                    <option  disabled>Select upgrade</option>
-                    <option value="99">Select upgrade2</option>
-
-                    <optgroup label="Production">
-                        <option value="88">Houses</option>
-                    </optgroup>
-                    <optgroup label="Community">
-                        <option name="community[pyramids]" value="pyramids,0">Pyramids</option>
-
-                    </optgroup>
-                </select>
-            </div>
+        </div>         
+        <div class="drop-down-container shrink">
+            <select class="civilization-menu">
+                <option disabled selected>Select upgrade</option>
+                <option value="99">Select upgrade2</option>
+        
+                <optgroup label="Production">
+                    <option value="88">Houses</option>
+                </optgroup>
+                <optgroup label="Community">
+                    <option name="community[pyramids]" value="community,pyramids,0">Pyramids</option>
+                    <option name="community[pyramids]" value="pyramids,1">Golden Pyramid</option>
+        
+                </optgroup>
+            </select>
         </div>
-    </div>
+    <!-- </div> -->
+   
+
 
     
 </body>

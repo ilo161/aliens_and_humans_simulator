@@ -1,12 +1,26 @@
 
 .canvas-container{
+    width: 700px;
     border: 1px solid purple;
+    position: relative;
 
 }
 
+
+
+#canvas-home{
+    width: 100%;
+    height:auto;
+    background-color: #fc575e;
+    background-image: linear-gradient(400deg, #fc575e 0%, #90d5ec 74%);
+}
+
 .drop-down-container{
-    width: 200px;
+    position: absolute;
+    width: 122px;
     height: 200px;
+    left: 680px;
+    top:150px;
 
     border: 1px solid yellow;
     display: block;
@@ -16,6 +30,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width:646px;
+    margin-left: 0px;
+
+    border: 1px solid pink;
 }
 
 .flex-row-start{
@@ -24,3 +42,11 @@
     align-items: center;
 }
 
+.hidden{
+    display: none;
+}
+
+.shrink{
+    width:0;
+    height: 0;
+}

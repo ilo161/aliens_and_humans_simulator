@@ -10,8 +10,6 @@ class MotherShip {
     makeShips(){
         let shipNum = this.army.length;
 
-        const alienSrc = "/src/images/aliens/ships/08-Netuno.png";
-
         const shipFiles = [
             "/src/images/aliens/ships/08-Netuno.png",
             "/src/images/aliens/ships/06-Saturno.png",
@@ -32,12 +30,7 @@ class MotherShip {
             const alienShip = new AlienShip(this.context, alienSrc, 1, yPos, 40, 40)
             this.army.push(alienShip)
 
-            
-
-
-
         }
-        // debugger
     }
 
 }

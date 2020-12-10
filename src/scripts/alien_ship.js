@@ -26,28 +26,11 @@ class AlienShip {
             }
         }
 
-        loadAlienShip(){
+    loadAlienShip(){
+    const alienSrc = this.filePath;
 
-        // const alienSrc = "/src/images/aliens/ships/08-Netuno.png";
-        const alienSrc = this.filePath;
-        // const alienSrc = "/src/images/terrain_grass/EmptySlot.png";
-     
-
-        this.sprite = new Image();
-        this.sprite.src = alienSrc;
-
-        //Standalone test for static ship
-        // debugger
-        this.sprite.onload = () => {
-            let that = this;
-            
-
-            // this.drawShip()
-            
-        }
-
-
-        
+    this.sprite = new Image();
+    this.sprite.src = alienSrc;        
 
     }
 
