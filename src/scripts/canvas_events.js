@@ -70,16 +70,24 @@ export const canvasEvents = (canvasHome, context) => {
     //dropdown on right side
     let menuContainer = document.getElementsByClassName("drop-down-container")[0]
     let menu = document.getElementsByClassName("civilization-menu")[0]
+    const playerAlert = document.getElementsByClassName("playerAlert")[0]
     
     //When user clicks on grid it sets currentGrid. If they click outside, it returns
     // undefined
     canvasHome.addEventListener('mousedown', (e) => {
         currentGrid = getCoords(e);
-        debugger
-        if (currentGrid){
-            debugger
+
+        if(currentGrid && Array.from(menuContainer.classList).includes("hidden")){
+            //show dropdown if user clicks in playgrid
             menuContainer.classList.toggle("hidden")
-        }
+
+            const len = menu.options.length;
+            menu.setAttribute('size', len);
+
+        } else if (currentGrid === undefined && !Array.from(menuContainer.classList).includes("hidden")) {
+            //hide dropdown if user clicks outside play grid            
+            menuContainer.classList.toggle("hidden")
+        } 
         console.log(`currentGrid: ${currentGrid}`)
     
     })
@@ -89,15 +97,43 @@ export const canvasEvents = (canvasHome, context) => {
         const choiceStr = menu.options[menu.selectedIndex].value
         const chosenBuilding = civilizationMenuSelect(choiceStr)
         const filePathBuild = chosenBuilding.file
-
+        debugger
+        //place sprite if not occupied
         if(!isGridOccupied()){
             parseImage(context, filePathBuild, currentGrid)
             occupyGrid(chosenBuilding)
             debugger
 
+            if (playerAlert.childElementCount > 0){
+                playerAlert.removeChild(playerAlert.childNodes[0]); 
+            }
         }
-        // else if(isGridOccupied() && chosenBuilding.)
+        // Already a building on a grid
+         else if(isGridOccupied()){
+             const x = currentGrid[0]
+             const y = currentGrid[1]
+             const objAtGridPos = onPlayerGrid[x][y]
 
+             // Player tries to add the same building to the occupied grid
+             if (chosenBuilding.klass === objAtGridPos.klass && chosenBuilding.index === objAtGridPos.level){
+                
+                // Add Error message to the DOM -> "That building is already there. Try upgrading!"
+                const ele = document.createElement('p');
+
+                var text = document.createTextNode("That building is already there. Try upgrading!"); 
+                ele.appendChild(text)
+                ele.setAttribute('class', 'playerAlert');
+                playerAlert.appendChild(ele)
+
+             } else {
+                 //Remove error message
+                 playerAlert.removeChild(playerAlert.childNodes[0]); 
+             }
+
+         }
+
+
+        // reset default of dropdown
         if (menu.selectedIndex != null){
             menu.selectedIndex = null
         }
@@ -106,9 +142,9 @@ export const canvasEvents = (canvasHome, context) => {
 
     })
 
-    menuContainer.classList.toggle("shrink")
-    debugger
-    menuContainer.classList.toggle("hidden")
+    // menuContainer.classList.toggle("shrink")
+    // debugger
+    // menuContainer.classList.toggle("hidden")
 
 
     let canvasRect = canvasHome.getBoundingClientRect();
@@ -234,13 +270,10 @@ const parseImage = (context, filePath, currentGrid) =>{
 
     const x = currentGrid[0]
     const y = currentGrid[1]
-    debugger
 
-    image.onload = () => {
-        debugger
-        
+
+    image.onload = () => {        
         drawOnGrid(image, context, x, y)
-
     }
 
 }

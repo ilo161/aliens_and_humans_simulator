@@ -17,13 +17,18 @@
 
 .drop-down-container{
     position: absolute;
-    width: 122px;
+    width: 142px;
     height: 200px;
     left: 680px;
     top:150px;
 
     border: 1px solid yellow;
     display: block;
+}
+
+.civilization-menu{
+    width: 100%;
+    height: 100%;
 }
 
 .gamebox{
@@ -34,6 +39,13 @@
     margin-left: 0px;
 
     border: 1px solid pink;
+}
+
+.playerAlert{
+    font-size: 16;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+    margin: 0 auto;
 }
 
 .flex-row-start{
