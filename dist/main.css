@@ -1,0 +1,3 @@
+.canvas-container{width:700px;border:1px solid purple;position:relative}#canvas-home{width:100%;height:auto;background-color:#fc575e;background-image:linear-gradient(400deg, #fc575e 0%, #90d5ec 74%)}.drop-down-container{position:absolute;width:142px;height:200px;left:680px;top:150px;border:1px solid #ff0;display:block}.civilization-menu{width:100%;height:100%}.gamebox{display:flex;justify-content:center;align-items:center;width:646px;margin-left:0px;border:1px solid pink}.playerAlert{font-size:16;font-family:"Courier New",Courier,monospace;font-weight:bolder;margin:0 auto}.flex-row-start{display:flex;justify-content:center;align-items:center}.hidden{display:none}.shrink{width:0;height:0}
+
+/*# sourceMappingURL=main.css.map*/
