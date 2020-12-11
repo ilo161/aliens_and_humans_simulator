@@ -47,7 +47,7 @@ class progressBar {
         this.colorSprite.src = colorBarSrc; 
         const that = this;
         this.blankSprite.onload = (e) => {
-            debugger
+            // debugger
             that.context.drawImage(that.blankSprite, that.startX, that.startY, 100, 100);
             that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 100);
         }
