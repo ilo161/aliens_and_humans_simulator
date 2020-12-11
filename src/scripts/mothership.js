@@ -1,4 +1,9 @@
+import {buildAssetPath} from "./util.js"
 import AlienShip from "./alien_ship"
+
+import neptune from "../images/aliens/ships/08-Netuno.png";
+import saturn from "../images/aliens/ships/06-Saturno.png";
+import pluto from "../images/aliens/ships/09-Pluto.png";
 
 class MotherShip {
     constructor(context){
@@ -10,10 +15,16 @@ class MotherShip {
     makeShips(){
         let shipNum = this.army.length;
 
+        // const shipFiles = [
+        //     "/src/images/aliens/ships/08-Netuno.png",
+        //     "/src/images/aliens/ships/06-Saturno.png",
+        //     "/src/images/aliens/ships/09-Pluto.png"
+        // ]
+
         const shipFiles = [
-            "/src/images/aliens/ships/08-Netuno.png",
-            "/src/images/aliens/ships/06-Saturno.png",
-            "/src/images/aliens/ships/09-Pluto.png"
+            buildAssetPath(neptune),
+            buildAssetPath(saturn),
+            buildAssetPath(pluto)
         ]
         // constructor(context, filePath, xStart, yStart, scaleW, scaleH){
         while(this.army.length < 3){

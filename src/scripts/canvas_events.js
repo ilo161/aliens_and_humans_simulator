@@ -1,11 +1,20 @@
-// import grass1 from "../images/terrain_grass/grass_mix_d.jpg"
 console.log("hello from canvas events")
 import AlienShip from "./alien_ship";
 import MotherShip from "./mothership";
+import {buildAssetPath} from "./util"
+
+import pyramid0 from "../images/community/pyramids/golden_pyramid.png"
+
+import grassD from "../images/terrain_grass/grass_mix_d.jpg"
 // import Alien from "./alien_ship"
 
 // //ex: [3,4]
 let currentGrid = undefined;
+
+
+// function buildAssetPath(imgSrc) {
+//     return `./dist/${imgSrc}`;
+// }
 
 const gameOptions = {
     0:  {0: [false, {}],
@@ -18,10 +27,10 @@ const gameOptions = {
     
 }
 
-const community1={pyramids:
-                        {0:"you did it!",
-                         1: "/src/images/community/pyramids/golden_pyramid.png"}
-                    }
+// const community1={pyramids:
+//                         {0:"you did it!",
+//                          1: "/src/images/community/pyramids/golden_pyramid.png"}
+//                     }
 
 // skeleton
 // {isPresent: false, klass: "", level:0}
@@ -48,7 +57,7 @@ function buildPlayerState(){
 const civilization = {
         community: {
                 parks: [],
-                pyramids: [{file: "/src/images/community/pyramids/golden_pyramid.png", name:"goldenPyramid", cBoost: 10, pBoost: 0, cORp: "community", klass:"pyramids", index:0 }],
+                pyramids: [{file: buildAssetPath(pyramid0), name:"goldenPyramid", cBoost: 10, pBoost: 0, cORp: "community", klass:"pyramids", index:0 }],
                 ruins: [{}],
                 meditationCircles: [],
                 trees:[]
@@ -216,7 +225,7 @@ const civilizationMenuSelect = (selected) => {
 export const drawGrass = (context) => {
     let img1 = new Image()
 
-        img1.src = "/src/images/terrain_grass/grass_mix_d.jpg"
+        img1.src = buildAssetPath(grassD)
 
         img1.onload = () => {
 

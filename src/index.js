@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", () =>  {
     drawGrass(context)
     //draw Production progress bar
     
-    const productionBar = new progressBar(context, 0, 375, "blue", "v")
-    const productionBar2 = new progressBar(context, 590, 375, "blue", "v")
+    const productionBar = new progressBar(context, -34, 375, "red", "v")
+    const productionBar2 = new progressBar(context, 590, 375, "yellow", "v")
     // productionBar.drawBar(context)
     // productionBar.blankSprite.onload = () => {
     //     debugger
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () =>  {
     // productionBar.increaseFill()
     // progressBar(context, 626, 476, "blue")
 
-    // summonAliens(context)
+    summonAliens(context)
     
 
     

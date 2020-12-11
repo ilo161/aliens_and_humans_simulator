@@ -1,3 +1,5 @@
+import {buildAssetPath} from "./util.js";
+
 class AlienShip {
     constructor(context, filePath, xStart, yStart, scaleW, scaleH){
         this.context = context;

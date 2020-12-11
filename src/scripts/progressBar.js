@@ -1,3 +1,17 @@
+import hBlank from "../images/h_progress_bars/H_BarBackground.png"
+import hBlue from "../images/h_progress_bars/H_BlueBar.png"
+import hGreen from "../images/h_progress_bars/H_GreenBar.png"
+import hRed from "../images/h_progress_bars/H_RedBar.png"
+import hYellow from "../images/h_progress_bars/H_YellowBar.png"
+
+
+import vBlank from "../images/v_progress_bars/V_BarBackground.png"
+import vBlue from "../images/v_progress_bars/V_BlueBar.png"
+import vGreen from "../images/v_progress_bars/V_GreenBar.png"
+import vRed from "../images/v_progress_bars/V_RedBar.png"
+import vYellow from "../images/v_progress_bars/V_YellowBar.png"
+import {buildAssetPath} from "./util.js"
+
 
 class progressBar {
     constructor(context, startX, startY, color, orientation){
@@ -46,10 +60,10 @@ class progressBar {
     orientationAndCreate(ori){
         if(ori === "h" || ori === "H"){
             // debugger
-            return "/src/images/h_progress_bars/H_BarBackground.png"
+            return buildAssetPath(hBlank)
         } else if(ori ==="v" || ori === "V") {
             // debugger
-            return "/src/images/v_progress_bars/V_BarBackground.png"
+            return buildAssetPath(vBlank)
         }
 
         }
@@ -58,18 +72,17 @@ class progressBar {
     selectColor(color, ori){
         let selected = undefined;
         const hColors = {
-            "blue": "/src/images/h_progress_bars/H_BlueBar.png",
-            // "blue": "/src/images/aliens/ships/08-Netuno.png",
-            "green": "/src/images/h_progress_bars/H_GreenBar.png",
-            "red": "/src/images/h_progress_bars/H_RedBar.png",
-            "yellow": "/src/images/h_progress_bars/H_YellowBar.png"
+            "blue": buildAssetPath(hBlue),
+            "green": buildAssetPath(hGreen),
+            "red": buildAssetPath(hRed),
+            "yellow": buildAssetPath(hYellow)
         }
 
         const vColors = {
-            "blue": "/src/images/v_progress_bars/V_BlueBar.png",
-            "green": "/src/images/v_progress_bars/V_GreenBar.png",
-            "red": "/src/images/v_progress_bars/V_RedBar.png",
-            "yellow": "/src/images/v_progress_bars/V_YellowBar.png"
+            "blue": buildAssetPath(vBlue),
+            "green": buildAssetPath(vGreen),
+            "red": buildAssetPath(vRed),
+            "yellow": buildAssetPath(vYellow)
         }
 
         if (ori === "h" || ori === "H"){
