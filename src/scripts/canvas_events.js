@@ -97,13 +97,13 @@ export const canvasEvents = (canvasHome, context) => {
         const choiceStr = menu.options[menu.selectedIndex].value
         const chosenBuilding = civilizationMenuSelect(choiceStr)
         const filePathBuild = chosenBuilding.file
-        debugger
+
         //place sprite if not occupied
         if(!isGridOccupied()){
             parseImage(context, filePathBuild, currentGrid)
             occupyGrid(chosenBuilding)
-            debugger
 
+            // Remove error message if there is one
             if (playerAlert.childElementCount > 0){
                 playerAlert.removeChild(playerAlert.childNodes[0]); 
             }
@@ -126,7 +126,8 @@ export const canvasEvents = (canvasHome, context) => {
                 playerAlert.appendChild(ele)
 
              } else {
-                 //Remove error message
+                 //Remove error message 
+                 // ********************** ADD FUNCTION HERE TO UPGRADE BUILDING
                  playerAlert.removeChild(playerAlert.childNodes[0]); 
              }
 
@@ -147,10 +148,9 @@ export const canvasEvents = (canvasHome, context) => {
     // menuContainer.classList.toggle("hidden")
 
 
-    let canvasRect = canvasHome.getBoundingClientRect();
-    console.log(canvasRect)
-    let cx;
-    let cy;
+    
+    // console.log(canvasRect)
+   
 
     // function onDown(e){
     //         cx = e.pageX;
@@ -159,14 +159,19 @@ export const canvasEvents = (canvasHome, context) => {
     // }
     
     function getCoords(e){
+        let canvasRect = canvasHome.getBoundingClientRect();
+        let cx;
+        let cy;
         let px = e.pageX;
         let py = e.pageY;
 
         cx = px - canvasRect.left
         cy = py - canvasRect.top
         console.log(canvasRect)
-        // console.log(cx)
-        // console.log(cy)
+
+        console.log("-------")
+        console.log(cx)
+        console.log(cy)
         const col = Math.floor((cx - 22) / 86) ;
         const row = Math.floor((cy - 131) / 86) ;
 
@@ -201,8 +206,8 @@ const civilizationMenuSelect = (selected) => {
         let klass = null;
         let index = null;
         [cORp, klass, index] = optionsArr;
-        console.log(civilization[cORp][klass][index])
-        debugger
+        console.log(civilization[cORp][klass][index]);
+
         return civilization[cORp][klass][index]
         // return community1[first][second]
     }
@@ -210,23 +215,24 @@ const civilizationMenuSelect = (selected) => {
 //function will draw grass
 export const drawGrass = (context) => {
     let img1 = new Image()
-    if (!img1.src){   
+
         img1.src = "/src/images/terrain_grass/grass_mix_d.jpg"
 
-            img1.onload = () => {
-            // debugger
-                drawRow(context, img1, 22, 131)
-                drawRow(context, img1, 22, 217)
-                drawRow(context, img1, 22, 303)
-                drawRow(context, img1, 22, 389)
+        img1.onload = () => {
+
+            drawRow(context, img1, 22, 131)
+            drawRow(context, img1, 22, 217)
+            drawRow(context, img1, 22, 303)
+            drawRow(context, img1, 22, 389)
 
         }
-    }
+    
 
     const drawRow = (context, image, rowX, rowY) => {
         for(let i = 0; i < 7; i++){
 
-            context.drawImage(image, rowX, rowY, image.width /11.9, image.height / 11.9 )
+            // context.drawImage(image, rowX, rowY, image.width /11.9, image.height / 11.9 )
+            context.drawImage(image, rowX, rowY, 86, 86 )
             // debugger
             rowX += 86
         }

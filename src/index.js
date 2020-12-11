@@ -3,6 +3,7 @@ import {animateSquares,
       drawGrass,
        drawOnGrid,
     summonAliens} from "./scripts/canvas_events.js"
+import progressBar from "./scripts/progressBar.js"
 import "./styles/index.scss";
 
 
@@ -15,7 +16,20 @@ document.addEventListener("DOMContentLoaded", () =>  {
 
     canvasEvents(canvasHome, context)
     drawGrass(context)
-    summonAliens(context)
+    //draw Production progress bar
+    
+    const productionBar = new progressBar(context, 0, 375, "blue", "v")
+    const productionBar2 = new progressBar(context, 590, 375, "blue", "v")
+    // productionBar.drawBar(context)
+    // productionBar.blankSprite.onload = () => {
+    //     debugger
+    //     context.drawImage(productionBar.blankSprite, productionBar.startX, productionBar.startY);
+    //     context.drawImage(productionBar.colorSprite, productionBar.startX, productionBar.startY);
+    // }
+    // productionBar.increaseFill()
+    // progressBar(context, 626, 476, "blue")
+
+    // summonAliens(context)
     
 
     
