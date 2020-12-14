@@ -3,9 +3,14 @@ import AlienShip from "./alien_ship";
 import MotherShip from "./mothership";
 import {buildAssetPath} from "./util"
 
-import pyramid0 from "../images/community/pyramids/golden_pyramid.png"
+//works
+import pyramid0 from "../images/community/pyramids/00red_pyramid.png"
+import pyramid1 from "../images/community/pyramids/01golden_pyramid.png"
+
+// import pyramid0 from "../images/community/pyramids/01pyramid.svg"
 
 import grassD from "../images/terrain_grass/grass_mix_d.jpg"
+
 // import Alien from "./alien_ship"
 
 // //ex: [3,4]
@@ -16,16 +21,16 @@ let currentGrid = undefined;
 //     return `./dist/${imgSrc}`;
 // }
 
-const gameOptions = {
-    0:  {0: [false, {}],
-         1: "clicked 0,1",
-         2: "clicked 0,2",
-         3: "clicked 0,3",
-         4: "clicked 0,4",
-         5: "clicked 0,5",
-         6: "clicked 0,6"}
+// const gameOptions = {
+//     0:  {0: [false, {}],
+//          1: "clicked 0,1",
+//          2: "clicked 0,2",
+//          3: "clicked 0,3",
+//          4: "clicked 0,4",
+//          5: "clicked 0,5",
+//          6: "clicked 0,6"}
     
-}
+// }
 
 // const community1={pyramids:
 //                         {0:"you did it!",
@@ -57,7 +62,11 @@ function buildPlayerState(){
 const civilization = {
         community: {
                 parks: [],
-                pyramids: [{file: buildAssetPath(pyramid0), name:"goldenPyramid", cBoost: 10, pBoost: 0, cORp: "community", klass:"pyramids", index:0 }],
+                pyramids: [
+                    {file: buildAssetPath(pyramid0), name:"redPyramid", cBoost: 10, pBoost: 0, cORp: "community", klass:"pyramids", index:0 },
+                    {file: buildAssetPath(pyramid1), name:"goldenPyramid", cBoost: 20, pBoost: 0, cORp: "community", klass:"pyramids", index:1 }
+                
+                ],
                 ruins: [{}],
                 meditationCircles: [],
                 trees:[]
