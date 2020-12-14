@@ -15,12 +15,6 @@ class MotherShip {
     makeShips(){
         let shipNum = this.army.length;
 
-        // const shipFiles = [
-        //     "/src/images/aliens/ships/08-Netuno.png",
-        //     "/src/images/aliens/ships/06-Saturno.png",
-        //     "/src/images/aliens/ships/09-Pluto.png"
-        // ]
-
         const shipFiles = [
             buildAssetPath(neptune),
             buildAssetPath(saturn),

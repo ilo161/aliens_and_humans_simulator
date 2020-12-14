@@ -17,9 +17,20 @@ document.addEventListener("DOMContentLoaded", () =>  {
     canvasEvents(canvasHome, context)
     drawGrass(context)
     //draw Production progress bar
+    // y is 375
+    // const blankLeft = new progressBar(context, -34, 128, "blank", "v")
+    // const blankLeft = new progressBar(context, -34, 115, "blank", "v");
+    // const blankRight = new progressBar(context, 590, 115, "blank", "v");
+
     
-    const productionBar = new progressBar(context, -34, 375, "red", "v")
-    const productionBar2 = new progressBar(context, 590, 375, "yellow", "v")
+    // const redBar = new progressBar(context, -34, 375, "red", "v")
+    const greenBar = new progressBar(context, -34, 105, "green", "v", 10);
+
+    // const yellowBar = new progressBar(context, 590, 375, "yellow", "v")
+
+    //start points
+    // const yellowBar = new progressBar(context, 590, 445, "yellow", "v")
+    const blueBar = new progressBar(context, 590, 105, "blue", "v", 20);
     // productionBar.drawBar(context)
     // productionBar.blankSprite.onload = () => {
     //     debugger
