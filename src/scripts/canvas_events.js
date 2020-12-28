@@ -6,12 +6,11 @@ import {buildAssetPath} from "./util"
 //works
 import pyramid0 from "../images/community/pyramids/00red_pyramid.png"
 import pyramid1 from "../images/community/pyramids/01golden_pyramid.png"
+import pyramid2 from "../images/community/pyramids/02light_pyramid.png"
 
 // import pyramid0 from "../images/community/pyramids/01pyramid.svg"
 
 import grassD from "../images/terrain_grass/grass_mix_d.jpg"
-
-// import Alien from "./alien_ship"
 
 // //ex: [3,4]
 let currentGrid = undefined;
@@ -21,29 +20,26 @@ let currentGrid = undefined;
 //     return `./dist/${imgSrc}`;
 // }
 
-// const gameOptions = {
-//     0:  {0: [false, {}],
-//          1: "clicked 0,1",
-//          2: "clicked 0,2",
-//          3: "clicked 0,3",
-//          4: "clicked 0,4",
-//          5: "clicked 0,5",
-//          6: "clicked 0,6"}
-    
-// }
-
-// const community1={pyramids:
-//                         {0:"you did it!",
-//                          1: "/src/images/community/pyramids/golden_pyramid.png"}
-//                     }
-
-// skeleton
-// {isPresent: false, klass: "", level:0}
+//This is a generic grass square preloaded with source path
+const grassSquare = new Image()
+grassSquare.src = buildAssetPath(grassD)
 
 
+
+// skeleton for onPlayerGrid
+//{isPresent: false, cORp: "", klass: "", level: null}
 const onPlayerGrid = buildPlayerState()
 
+// contains money, and current build points for player throughout the game
+const playerPoints = {
+    community: 0,
+    production: 0,
+    resources: 0
+}
+// console.log(onPlayerGrid)
 
+// This function builds an object containing all the coordinates of the play grid and 
+// stores state of what the player has played
 function buildPlayerState(){
     let buildPlayerGrid = {}
     for(let i = 0 ; i < 4; i++){
@@ -63,8 +59,9 @@ const civilization = {
         community: {
                 parks: [],
                 pyramids: [
-                    {file: buildAssetPath(pyramid0), name:"redPyramid", cBoost: 10, pBoost: 0, cORp: "community", klass:"pyramids", index:0 },
-                    {file: buildAssetPath(pyramid1), name:"goldenPyramid", cBoost: 20, pBoost: 0, cORp: "community", klass:"pyramids", index:1 }
+                    {file: buildAssetPath(pyramid0), name:"redPyramid", boost: 10, cORp: "community", klass:"pyramids", index:0 },
+                    {file: buildAssetPath(pyramid1), name:"goldenPyramid", boost: 20, cORp: "community", klass:"pyramids", index:1 },
+                    {file: buildAssetPath(pyramid2), name:"lightPyramid", boost: 30, cORp: "community", klass:"pyramids", index:2 }
                 
                 ],
                 ruins: [{}],
@@ -111,55 +108,92 @@ export const canvasEvents = (canvasHome, context) => {
     })
 
     // When user selects from the drop down menu to place a sprite
-    menu.addEventListener('change', ()=>{
+    menu.addEventListener('change', () => {
         const choiceStr = menu.options[menu.selectedIndex].value
         const chosenBuilding = civilizationMenuSelect(choiceStr)
         const filePathBuild = chosenBuilding.file
 
+        // Remove error message if there is one
+        removePlayerAlert()
+
         //place sprite if not occupied
         if(!isGridOccupied()){
-            parseImage(context, filePathBuild, currentGrid)
-            occupyGrid(chosenBuilding)
+            
+            if (isInitialBuilding(chosenBuilding) === true){
+                parseImage(context, filePathBuild, currentGrid)
+                occupyGrid(chosenBuilding)
 
-            // Remove error message if there is one
-            if (playerAlert.childElementCount > 0){
-                playerAlert.removeChild(playerAlert.childNodes[0]); 
+                playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
+            } else {
+                playerAlert.appendChild(generateErrorAlert("That building is not the first of it's kind!"))
             }
-        }
-        // Already a building on a grid
-         else if(isGridOccupied()){
+        } else if (isGridOccupied()){
+             // Already a building on grid pos
              const x = currentGrid[0]
              const y = currentGrid[1]
              const objAtGridPos = onPlayerGrid[x][y]
+             const maxIndexOfType = civilization[chosenBuilding.cORp][chosenBuilding.klass].length - 1
 
              // Player tries to add the same building to the occupied grid
-             if (chosenBuilding.klass === objAtGridPos.klass && chosenBuilding.index === objAtGridPos.level){
+             if (chosenBuilding.klass === objAtGridPos.klass && chosenBuilding.index === objAtGridPos.level
+                && maxIndexOfType != chosenBuilding.index){
+
+                playerAlert.appendChild(generateErrorAlert("That building is already there. Try upgrading!"));
+
+             } else if (chosenBuilding.klass !== objAtGridPos.klass){
+                // Player tries to upgrade to a building of a different klass
+
+                 playerAlert.appendChild(generateErrorAlert("Try upgrading that structure to a higher level!"));
+             } else if (chosenBuilding.klass === objAtGridPos.klass) {
+                // building klass is a match
                 
-                // Add Error message to the DOM -> "That building is already there. Try upgrading!"
-                const ele = document.createElement('p');
+                // player has maxed out upgrade
+                 if (maxIndexOfType === objAtGridPos.level){
+                     playerAlert.appendChild(generateErrorAlert("Max upgrade achieved!"));
+                 } else if (chosenBuilding.index === (objAtGridPos.level + 1)){
+                     // player upgrades appropriately by 1 level
+                     //re-render grass first && remove previous building
+                     drawOnGrid(grassSquare, context, x, y, true)
+                     debugger
+                     parseImage(context, filePathBuild, currentGrid)
+                     occupyGrid(chosenBuilding)
+                     playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
+                 } else if (chosenBuilding.index < objAtGridPos.level){
+                     playerAlert.appendChild(generateErrorAlert("Try upgrading, we must not regret our past decisions"));
+                 }
+                 
 
-                var text = document.createTextNode("That building is already there. Try upgrading!"); 
-                ele.appendChild(text)
-                ele.setAttribute('class', 'playerAlert');
-                playerAlert.appendChild(ele)
-
-             } else {
-                 //Remove error message 
-                 // ********************** ADD FUNCTION HERE TO UPGRADE BUILDING
-                 playerAlert.removeChild(playerAlert.childNodes[0]); 
              }
+            
 
          }
 
 
         // reset default of dropdown
-        if (menu.selectedIndex != null){
             menu.selectedIndex = null
-        }
+            console.log(playerPoints)
+
 
 
 
     })
+
+    //Alert System
+    const removePlayerAlert = () => {
+         if (playerAlert.childElementCount > 0){
+            playerAlert.removeChild(playerAlert.childNodes[0]); 
+        }
+    }
+
+    const generateErrorAlert = (errorMsg) => {
+        // Add Error message to the DOM -> "That building is already there. Try upgrading!"
+        const ele = document.createElement('p');
+
+        const text = document.createTextNode(errorMsg); 
+        ele.appendChild(text)
+        ele.setAttribute('class', 'playerAlert');
+        return ele
+    }
 
     // menuContainer.classList.toggle("shrink")
     // debugger
@@ -176,7 +210,7 @@ export const canvasEvents = (canvasHome, context) => {
     //     // console.log(`X: ${cx}, Y: ${cy}`)
     // }
     
-    function getCoords(e){
+    const getCoords = (e) => {
         let canvasRect = canvasHome.getBoundingClientRect();
         let cx;
         let cy;
@@ -224,10 +258,11 @@ const civilizationMenuSelect = (selected) => {
         let klass = null;
         let index = null;
         [cORp, klass, index] = optionsArr;
+        console.log("--")
+        console.log(optionsArr);
         console.log(civilization[cORp][klass][index]);
 
         return civilization[cORp][klass][index]
-        // return community1[first][second]
     }
 
 //function will draw grass
@@ -264,6 +299,7 @@ const isGridOccupied = () => {
     return onPlayerGrid[x][y].isPresent
 }
 
+//update gameState with chosen Building
 const occupyGrid = (chosenBuilding) => {
     const x = currentGrid[0]
     const y = currentGrid[1]
@@ -272,9 +308,16 @@ const occupyGrid = (chosenBuilding) => {
     onPlayerGrid[x][y].cORp = chosenBuilding.cORp
     onPlayerGrid[x][y].klass = chosenBuilding.klass
     onPlayerGrid[x][y].level = chosenBuilding.index
+
     return onPlayerGrid[x][y]
 }
 
+const isInitialBuilding = (chosenBuilding) => {
+    if (chosenBuilding.index === 0) return true;
+    return false
+}
+
+// to be MOVED LATER *!*!*!*!*!*!!*!*!*!*!*!*!*!*
 export const summonAliens = (context) => {
     const motherShip = new MotherShip(context)
         motherShip.makeShips()
@@ -302,7 +345,7 @@ const parseImage = (context, filePath, currentGrid) =>{
 
 }
 
-const drawOnGrid = (image, context, gridX, gridY) => {
+const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
     console.log("draw on grid")
         const offsetX = 22;
         const offsetY = 131;
@@ -313,16 +356,40 @@ const drawOnGrid = (image, context, gridX, gridY) => {
             // context.drawImage(this.sprite, this.movements[this.moveIdx].x, this.movements[this.moveIdx].y, this.scaleW, this.scaleH )
             //works and original func
             // context.drawImage(image, offsetX, offsetY, image.width /11.9, image.height / 11.9 )
-            context.drawImage(image, offsetX, offsetY, 86, 86 )
+            if (clearRectBoolean){
+                debugger
+                context.clearRect(offsetX, offsetY, 86, 86)
+                context.drawImage(image, offsetX, offsetY, 86, 86)
+            } else {
+                context.drawImage(image, offsetX, offsetY, 86, 86 )
+            }
         } else if (gridX === 0 && gridY > 0){
             //original
             // context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, image.width /11.9, image.height / 11.9 )
-            context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, 86, 86 )
+            if (clearRectBoolean){
+                debugger
+                // context.clearRect(offsetX, offsetY, 86, 86)
+                // context.drawImage(image, offsetX, offsetY, 86, 86)
+                context.clearRect(((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86)
+                context.drawImage(image, ((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86 )
+            } else {
+                context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, 86, 86 )
+            }
         } else {
             // debugger
              //original
             // context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, image.width /11.9, image.height / 11.9 )
-            context.drawImage(image, ((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86 )
+            if (clearRectBoolean){
+                debugger
+                //original
+                // context.clearRect(offsetX, offsetY, 86, 86)
+                // context.drawImage(image, offsetX, offsetY, 86, 86)
+
+                context.clearRect(((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86)
+                context.drawImage(image, ((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86 )
+            } else {
+                context.drawImage(image, ((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86 )
+            }
         }
 
     
