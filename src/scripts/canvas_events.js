@@ -154,7 +154,7 @@ export const canvasEvents = (canvasHome, context) => {
                      // player upgrades appropriately by 1 level
                      //re-render grass first && remove previous building
                      drawOnGrid(grassSquare, context, x, y, true)
-                     debugger
+                     
                      parseImage(context, filePathBuild, currentGrid)
                      occupyGrid(chosenBuilding)
                      playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
@@ -196,7 +196,7 @@ export const canvasEvents = (canvasHome, context) => {
     }
 
     // menuContainer.classList.toggle("shrink")
-    // debugger
+    // 
     // menuContainer.classList.toggle("hidden")
 
 
@@ -286,7 +286,7 @@ export const drawGrass = (context) => {
 
             // context.drawImage(image, rowX, rowY, image.width /11.9, image.height / 11.9 )
             context.drawImage(image, rowX, rowY, 86, 86 )
-            // debugger
+            // 
             rowX += 86
         }
     }
@@ -357,7 +357,7 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
             //works and original func
             // context.drawImage(image, offsetX, offsetY, image.width /11.9, image.height / 11.9 )
             if (clearRectBoolean){
-                debugger
+                
                 context.clearRect(offsetX, offsetY, 86, 86)
                 context.drawImage(image, offsetX, offsetY, 86, 86)
             } else {
@@ -367,7 +367,7 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
             //original
             // context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, image.width /11.9, image.height / 11.9 )
             if (clearRectBoolean){
-                debugger
+                
                 // context.clearRect(offsetX, offsetY, 86, 86)
                 // context.drawImage(image, offsetX, offsetY, 86, 86)
                 context.clearRect(((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86)
@@ -376,11 +376,11 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
                 context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, 86, 86 )
             }
         } else {
-            // debugger
+            // 
              //original
             // context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, image.width /11.9, image.height / 11.9 )
             if (clearRectBoolean){
-                debugger
+                
                 //original
                 // context.clearRect(offsetX, offsetY, 86, 86)
                 // context.drawImage(image, offsetX, offsetY, 86, 86)

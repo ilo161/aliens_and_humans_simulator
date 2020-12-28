@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () =>  {
     const blueBar = new progressBar(context, 590, 105, "blue", "v", 20);
     // productionBar.drawBar(context)
     // productionBar.blankSprite.onload = () => {
-    //     debugger
+    //     
     //     context.drawImage(productionBar.blankSprite, productionBar.startX, productionBar.startY);
     //     context.drawImage(productionBar.colorSprite, productionBar.startX, productionBar.startY);
     // }
