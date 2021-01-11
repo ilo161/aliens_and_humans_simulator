@@ -6,40 +6,44 @@
 
 }
 
+.gamebox{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 646px;
+    margin-left: 200px;
 
+    border: 1px solid pink;
+}
 
 #canvas-home{
     width: 100%;
-    height:auto;
+    height: auto;
     background-color: #fc575e;
-    background-image: linear-gradient(400deg, #fc575e 0%, #90d5ec 74%);
+    background-image: linear-gradient(40deg, #fc575e 0%, #90d5ec 74%);
 }
 
+.right-side-bar{
+    width: 142px;
+    border: 1px solid red
+}
 .drop-down-container{
-    position: absolute;
+    
     width: 142px;
     height: 200px;
     left: 680px;
-    top:150px;
+    top: 150px;
 
     border: 1px solid yellow;
     display: block;
 }
 
-.civilization-menu{
-    width: 100%;
-    height: 100%;
-}
+    .civilization-menu{
+        width: 100%;
+        height: 100%;
+    }
 
-.gamebox{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width:646px;
-    margin-left: 0px;
 
-    border: 1px solid pink;
-}
 
 .playerAlert{
     font-size: 16;
