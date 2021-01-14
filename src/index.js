@@ -6,6 +6,8 @@ import {animateSquares,
 import progressBar from "./scripts/progressBar.js"
 import "./styles/index.scss";
 
+import {drawResourcesText, spawnResources} from "./scripts/pointsSystem";
+
 
 
 
@@ -18,19 +20,37 @@ document.addEventListener("DOMContentLoaded", () =>  {
     drawGrass(context)
     //draw Production progress bar
     // y is 375
-    // const blankLeft = new progressBar(context, -34, 128, "blank", "v")
+    // const blankLeft = new progressBar(context, -34, 125, "blank", "v")
     // const blankLeft = new progressBar(context, -34, 115, "blank", "v");
     // const blankRight = new progressBar(context, 590, 115, "blank", "v");
+    // debugger
+    const makeResourcesId = setInterval(() => {
+        spawnResources();
+        drawResourcesText(context);
+    }, 600)
 
-    
-    // const redBar = new progressBar(context, -34, 375, "red", "v")
-    const greenBar = new progressBar(context, -34, 105, "green", "v", 10);
+    setInterval(() => {
+        drawResourcesText(context);
+    }, 250)
+    // spawnResources();
+    // drawResourcesText(context);
+
+
+
+
+    // const greenBar = new progressBar(context, -34, 105, "green", "v", 10);
+    // const blueBar = new progressBar(context, 590, 105, "blue", "v", 20);
+    // const redBar = new progressBar(context, -34, 375, "blue", "v")
+
+    // const greenBar = new progressBar(context, -34, 105, "green", "v", 90);
+
+    // greenBar.increaseFill(100)
 
     // const yellowBar = new progressBar(context, 590, 375, "yellow", "v")
 
     //start points
     // const yellowBar = new progressBar(context, 590, 445, "yellow", "v")
-    const blueBar = new progressBar(context, 590, 105, "blue", "v", 20);
+    // const blueBar = new progressBar(context, 590, 105, "blue", "v", 20);
     // productionBar.drawBar(context)
     // productionBar.blankSprite.onload = () => {
     //     
@@ -40,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () =>  {
     // productionBar.increaseFill()
     // progressBar(context, 626, 476, "blue")
 
-    summonAliens(context)
+    // summonAliens(context)
     
 
     

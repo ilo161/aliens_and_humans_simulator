@@ -43,6 +43,7 @@ class progressBar {
         this.points = 30;
         this.color = color;
         this.value = value;
+        this.orientation = orientation
 
         this.blankSprite = undefined;
         this.colorSprite = undefined;
@@ -67,13 +68,14 @@ class progressBar {
             const colorBarSrc = this.selectColor(this.color, orientation, this.value)
             this.colorSprite = new Image();
             this.colorSprite.src = colorBarSrc; 
-            // debugger
+            debugger
             const that = this;
             this.colorSprite.onload = (e) => {
 
                 // that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 278);
                 // 30 is good start
                 // that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 30);
+                debugger
                 that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 400);
             }
 
@@ -121,7 +123,7 @@ class progressBar {
             return buildAssetPath(vBlank)
         }
 
-        }
+    }
 
          // select color of progress bar vertical or horizontal
     selectColor(color, ori, value){
@@ -176,7 +178,24 @@ class progressBar {
 
     increaseFill(value){
         // this.context.drawImage(this.colorSprite, this.startX, this.startY, 22, 200)
-    }
+        // this.context.drawImage(this.colorSprite, this.startX, this.startY, 22, 200)
+        // else {
+            this.value = value
+            const colorBarSrc = this.selectColor(this.color, this.orientation, this.value)
+            // this.colorSprite = new Image();
+            this.colorSprite.src = colorBarSrc; 
+            // debugger
+            const that = this;
+            this.colorSprite.onload = (e) => {
+
+                // that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 278);
+                // 30 is good start
+                // that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 30);
+                that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 400);
+            }
+
+        }
+    
 
     decreaseFill(value){
 

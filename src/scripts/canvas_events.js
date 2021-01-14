@@ -2,6 +2,7 @@ console.log("hello from canvas events")
 import AlienShip from "./alien_ship";
 import MotherShip from "./mothership";
 import {buildAssetPath} from "./util"
+import {playerPoints, adjustPoints, adjustResources} from "./pointsSystem"
 
 //works
 import pyramid0 from "../images/community/pyramids/00red_pyramid.png"
@@ -24,18 +25,17 @@ let currentGrid = undefined;
 const grassSquare = new Image()
 grassSquare.src = buildAssetPath(grassD)
 
-
+// const playerPoints = {
+//     community: 0,
+//     production: 0,
+//     resources: 0
+// }
 
 // skeleton for onPlayerGrid
 //{isPresent: false, cORp: "", klass: "", level: null}
 const onPlayerGrid = buildPlayerState()
 
-// contains money, and current build points for player throughout the game
-const playerPoints = {
-    community: 0,
-    production: 0,
-    resources: 0
-}
+
 // console.log(onPlayerGrid)
 
 // This function builds an object containing all the coordinates of the play grid and 
@@ -109,12 +109,22 @@ export const canvasEvents = (canvasHome, context) => {
 
     // When user selects from the drop down menu to place a sprite
     menu.addEventListener('change', () => {
+        console.log(playerPoints.resources)
+        // Remove error message if there is one
+        removePlayerAlert()
+
+        if (playerPoints.resources < 20){
+            playerAlert.appendChild(generateErrorAlert("Every building costs 20 resources ... !"))
+            menu.selectedIndex = null; 
+            return false
+        } 
+        adjustResources(-20)
+
         const choiceStr = menu.options[menu.selectedIndex].value
         const chosenBuilding = civilizationMenuSelect(choiceStr)
         const filePathBuild = chosenBuilding.file
 
-        // Remove error message if there is one
-        removePlayerAlert()
+        
 
         //place sprite if not occupied
         if(!isGridOccupied()){
@@ -124,6 +134,9 @@ export const canvasEvents = (canvasHome, context) => {
                 occupyGrid(chosenBuilding)
 
                 playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
+                debugger
+                adjustPoints(playerPoints.community, context)
+                adjustPoints(playerPoints.community, context, "production")
             } else {
                 playerAlert.appendChild(generateErrorAlert("That building is not the first of it's kind!"))
             }
@@ -259,8 +272,8 @@ const civilizationMenuSelect = (selected) => {
         let index = null;
         [cORp, klass, index] = optionsArr;
         console.log("--")
-        console.log(optionsArr);
-        console.log(civilization[cORp][klass][index]);
+        // console.log(optionsArr);
+        // console.log(civilization[cORp][klass][index]);
 
         return civilization[cORp][klass][index]
     }
@@ -345,6 +358,7 @@ const parseImage = (context, filePath, currentGrid) =>{
 
 }
 
+// FN will draw an image at the appropriate spot on the grid
 const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
     console.log("draw on grid")
         const offsetX = 22;
