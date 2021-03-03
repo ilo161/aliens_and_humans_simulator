@@ -9,7 +9,7 @@ export const playerPoints = {
 
 // cORp stands for community or production
 export const adjustPoints = (points, context, style = "community") => {
-    debugger
+
     let fillPercentage; 
     switch(true){
         case (points <= 42):
@@ -52,6 +52,7 @@ export const adjustPoints = (points, context, style = "community") => {
         debugger
         const greenBar = new progressBar(context, -34, 105, "green", "v", fillPercentage);
     } else {
+        debugger
         const blueBar = new progressBar(context, 590, 105, "blue", "v", fillPercentage);
     }
 }
@@ -61,7 +62,7 @@ export const spawnResources = () => {
 }
 
 export const adjustResources = (num) => {
-    debugger
+    // debugger
     playerPoints.resources += num;
 }
 

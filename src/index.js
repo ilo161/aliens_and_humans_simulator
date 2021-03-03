@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", () =>  {
     //draw Production progress bar
     // y is 375
     // const blankLeft = new progressBar(context, -34, 125, "blank", "v")
-    // const blankLeft = new progressBar(context, -34, 115, "blank", "v");
-    // const blankRight = new progressBar(context, 590, 115, "blank", "v");
+    const blankLeft = new progressBar(context, -34, 115, "blank", "v");
+    const blankRight = new progressBar(context, 590, 115, "blank", "v");
     // debugger
     const makeResourcesId = setInterval(() => {
         spawnResources();

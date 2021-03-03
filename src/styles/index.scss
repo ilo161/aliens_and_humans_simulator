@@ -25,13 +25,16 @@
 
 .right-side-bar{
     width: 142px;
+    height: 500px;
+    position: relative;
     border: 1px solid red
 }
 .drop-down-container{
-    
+    position: absolute;
     width: 142px;
     height: 200px;
-    left: 680px;
+    
+    left: 30px;
     top: 150px;
 
     border: 1px solid yellow;

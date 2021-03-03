@@ -5,9 +5,11 @@ import {buildAssetPath} from "./util"
 import {playerPoints, adjustPoints, adjustResources} from "./pointsSystem"
 
 //works
-import pyramid0 from "../images/community/pyramids/00red_pyramid.png"
-import pyramid1 from "../images/community/pyramids/01golden_pyramid.png"
-import pyramid2 from "../images/community/pyramids/02light_pyramid.png"
+// import pyramid0 from "../images/community/pyramids/00red_pyramid.png"
+// import pyramid1 from "../images/community/pyramids/01golden_pyramid.png"
+// import pyramid2 from "../images/community/pyramids/02light_pyramid.png"
+
+import {allSprites} from "./allSprites"
 
 // import pyramid0 from "../images/community/pyramids/01pyramid.svg"
 
@@ -59,9 +61,9 @@ const civilization = {
         community: {
                 parks: [],
                 pyramids: [
-                    {file: buildAssetPath(pyramid0), name:"redPyramid", boost: 10, cORp: "community", klass:"pyramids", index:0 },
-                    {file: buildAssetPath(pyramid1), name:"goldenPyramid", boost: 20, cORp: "community", klass:"pyramids", index:1 },
-                    {file: buildAssetPath(pyramid2), name:"lightPyramid", boost: 30, cORp: "community", klass:"pyramids", index:2 }
+                    {file: buildAssetPath(allSprites["pyramid0"]), name:"redPyramid", boost: 10, cORp: "community", klass:"pyramids", index:0 },
+                    {file: buildAssetPath(allSprites["pyramid1"]), name:"goldenPyramid", boost: 20, cORp: "community", klass:"pyramids", index:1 },
+                    {file: buildAssetPath(allSprites["pyramid2"]), name:"lightPyramid", boost: 30, cORp: "community", klass:"pyramids", index:2 }
                 
                 ],
                 ruins: [{}],
@@ -71,7 +73,11 @@ const civilization = {
         production: {
                 farms: [],
                 buildings: [],
-                houses: [],
+                houses: [
+                     {file: buildAssetPath(allSprites["house0"]), name:"shack", boost: 15, cORp: "production", klass:"houses", index:0 },
+                     {file: buildAssetPath(allSprites["house1"]), name:"better", boost: 25, cORp: "production", klass:"houses", index:1 },
+                     {file: buildAssetPath(allSprites["house2"]), name:"home", boost: 35, cORp: "production", klass:"houses", index:2 }
+                ],
                 energy: {
                         wind:[],
                         solar:[],
@@ -118,12 +124,19 @@ export const canvasEvents = (canvasHome, context) => {
             menu.selectedIndex = null; 
             return false
         } 
-        adjustResources(-20)
-
+        
+        //choiceStr is "production,houses,0"
         const choiceStr = menu.options[menu.selectedIndex].value
+        debugger
+        const okToRender = verifyBuildingMatch(choiceStr)
+        if(!okToRender) return false;
+        
+        //chosenBuilding is \
+        //{isPresent: false, cORp: "", klass: "", level: null}
         const chosenBuilding = civilizationMenuSelect(choiceStr)
         const filePathBuild = chosenBuilding.file
-
+        console.log("PAY UP")
+        adjustResources(-20)
         
 
         //place sprite if not occupied
@@ -135,48 +148,54 @@ export const canvasEvents = (canvasHome, context) => {
 
                 playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
                 debugger
-                adjustPoints(playerPoints.community, context)
-                adjustPoints(playerPoints.community, context, "production")
+                adjustPoints(playerPoints[chosenBuilding.cORp], context, chosenBuilding.cORp)
+                // adjustPoints(playerPoints.community, context)
+                // adjustPoints(playerPoints.production, context, "production")
             } else {
                 playerAlert.appendChild(generateErrorAlert("That building is not the first of it's kind!"))
             }
         } else if (isGridOccupied()){
              // Already a building on grid pos
-             const x = currentGrid[0]
-             const y = currentGrid[1]
-             const objAtGridPos = onPlayerGrid[x][y]
-             const maxIndexOfType = civilization[chosenBuilding.cORp][chosenBuilding.klass].length - 1
+             const x = currentGrid[0];
+             const y = currentGrid[1];
 
-             // Player tries to add the same building to the occupied grid
-             if (chosenBuilding.klass === objAtGridPos.klass && chosenBuilding.index === objAtGridPos.level
-                && maxIndexOfType != chosenBuilding.index){
+             const objAtGridPos = onPlayerGrid[x][y];
+            //  const maxIndexOfType = civilization[chosenBuilding.cORp][chosenBuilding.klass].length - 1
 
-                playerAlert.appendChild(generateErrorAlert("That building is already there. Try upgrading!"));
+            //  // Player tries to add the same building to the occupied grid
+            //  if (chosenBuilding.klass === objAtGridPos.klass && chosenBuilding.index === objAtGridPos.level
+            //     && maxIndexOfType != chosenBuilding.index){
 
-             } else if (chosenBuilding.klass !== objAtGridPos.klass){
-                // Player tries to upgrade to a building of a different klass
+            //     playerAlert.appendChild(generateErrorAlert("That building is already there. Try upgrading!"));
 
-                 playerAlert.appendChild(generateErrorAlert("Try upgrading that structure to a higher level!"));
-             } else if (chosenBuilding.klass === objAtGridPos.klass) {
-                // building klass is a match
+            //  } else if (chosenBuilding.klass !== objAtGridPos.klass){
+            //     // Player tries to upgrade to a building of a different klass
+
+            //      playerAlert.appendChild(generateErrorAlert("Try upgrading that structure to a higher level!"));
+            //  } else if (chosenBuilding.klass === objAtGridPos.klass) {
+            //     // building klass is a match
                 
-                // player has maxed out upgrade
-                 if (maxIndexOfType === objAtGridPos.level){
-                     playerAlert.appendChild(generateErrorAlert("Max upgrade achieved!"));
-                 } else if (chosenBuilding.index === (objAtGridPos.level + 1)){
+            //     // player has maxed out upgrade
+            //      if (maxIndexOfType === objAtGridPos.level){
+            //          playerAlert.appendChild(generateErrorAlert("Max upgrade achieved!"));
+                //  } 
+                //  else 
+                 if (chosenBuilding.index === (objAtGridPos.level + 1)){
                      // player upgrades appropriately by 1 level
                      //re-render grass first && remove previous building
+                     console.log("DRAW!!!")
                      drawOnGrid(grassSquare, context, x, y, true)
                      
                      parseImage(context, filePathBuild, currentGrid)
                      occupyGrid(chosenBuilding)
                      playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
-                 } else if (chosenBuilding.index < objAtGridPos.level){
-                     playerAlert.appendChild(generateErrorAlert("Try upgrading, we must not regret our past decisions"));
                  }
+                //   else if (chosenBuilding.index < objAtGridPos.level){
+                //      playerAlert.appendChild(generateErrorAlert("Try upgrading, we must not regret our past decisions"));
+                //  }
                  
 
-             }
+            //  }
             
 
          }
@@ -190,6 +209,48 @@ export const canvasEvents = (canvasHome, context) => {
 
 
     })
+
+    const verifyBuildingMatch = (choiceStr) => {
+        const x = currentGrid[0]
+        const y = currentGrid[1]
+
+        if(onPlayerGrid[x][y].isPresent === true){
+            let optionsArr = choiceStr.split(",")
+            let nextcORp = null
+            let nextKlass = null;
+            let nextIndex = null;
+            [nextcORp, nextKlass, nextIndex] = optionsArr;
+            nextIndex = parseInt(optionsArr[2])
+            
+            const objAtGridPos = onPlayerGrid[x][y]
+            const maxIndexOfType = civilization[nextcORp][nextKlass].length - 1
+            console.log(maxIndexOfType)
+            
+            debugger
+            if(objAtGridPos.cORp !== nextcORp || objAtGridPos.klass !== nextKlass){
+                playerAlert.appendChild(generateErrorAlert("Building types must match!"))
+                return false;
+            } else if (nextKlass === objAtGridPos.klass && nextIndex === objAtGridPos.level
+                && maxIndexOfType != nextIndex){
+                // debugger
+                playerAlert.appendChild(generateErrorAlert("That building is already there. Try upgrading!"));
+                return false
+             } else if (nextKlass === objAtGridPos.klass) {
+                // building klass is a match
+                
+                // player has maxed out upgrade
+                 if (maxIndexOfType === objAtGridPos.level){
+                     playerAlert.appendChild(generateErrorAlert("Max upgrade achieved!"));
+                     return false;
+                 } else if (nextIndex < objAtGridPos.level){
+                     playerAlert.appendChild(generateErrorAlert("Try upgrading, we must not regret our past decisions"));
+                     return false;
+                 }
+            }
+            // else if ()
+        }
+        return true
+    }
 
     //Alert System
     const removePlayerAlert = () => {
@@ -264,7 +325,7 @@ export const canvasEvents = (canvasHome, context) => {
     }
 
 }
-
+// selected argument is "production,houses,0"
 const civilizationMenuSelect = (selected) => {
         let optionsArr = selected.split(",")
         let cORp = null
