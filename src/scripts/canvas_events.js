@@ -59,24 +59,41 @@ function buildPlayerState(){
 //{file: """, name:"", cBoost: 10, pBoost: 0, community:"", klass:"", index:#}
 const civilization = {
         community: {
-                parks: [],
+                fountains: [
+                    {file: buildAssetPath(allSprites["fountain0"]), name:"Dual Fountain", boost: 10, cORp: "community", klass:"fountains", index:0 }
+                ],
+                meditations: [
+                    {file: buildAssetPath(allSprites["meditate0"]), name:"Ruins Meditate", boost: 10, cORp: "community", klass:"meditations", index:0 },
+                    {file: buildAssetPath(allSprites["meditate1"]), name:"Enlightened Meditate", boost: 20, cORp: "community", klass:"meditations", index:1 },
+                    {file: buildAssetPath(allSprites["meditate2"]), name:"Activated Meditate", boost: 30, cORp: "community", klass:"meditations", index:2 },
+
+                ],
                 pyramids: [
-                    {file: buildAssetPath(allSprites["pyramid0"]), name:"redPyramid", boost: 10, cORp: "community", klass:"pyramids", index:0 },
-                    {file: buildAssetPath(allSprites["pyramid1"]), name:"goldenPyramid", boost: 20, cORp: "community", klass:"pyramids", index:1 },
-                    {file: buildAssetPath(allSprites["pyramid2"]), name:"lightPyramid", boost: 30, cORp: "community", klass:"pyramids", index:2 }
+                    {file: buildAssetPath(allSprites["pyramid0"]), name:"Red Pyramid", boost: 10, cORp: "community", klass:"pyramids", index:0 },
+                    {file: buildAssetPath(allSprites["pyramid1"]), name:"Golden Pyramid", boost: 20, cORp: "community", klass:"pyramids", index:1 },
+                    {file: buildAssetPath(allSprites["pyramid2"]), name:"Pyramid of Light", boost: 30, cORp: "community", klass:"pyramids", index:2 }
                 
                 ],
-                ruins: [{}],
-                meditationCircles: [],
-                trees:[]
+                ruins: [
+                    {file: buildAssetPath(allSprites["ruin0"]), name:"Yellow Slab", boost: 10, cORp: "community", klass:"ruins", index:0 },
+                    {file: buildAssetPath(allSprites["ruin1"]), name:"Rainbow Rock", boost: 20, cORp: "community", klass:"ruins", index:1 },
+                    {file: buildAssetPath(allSprites["ruin2"]), name:"Stone of Light", boost: 30, cORp: "community", klass:"ruins", index:2 }
+
+                ],
+                
+                trees:[
+                    {file: buildAssetPath(allSprites["tree0"]), name:"Small Tree", boost: 10, cORp: "community", klass:"trees", index:0 },
+                    {file: buildAssetPath(allSprites["tree1"]), name:"Mighty Tree", boost: 20, cORp: "community", klass:"trees", index:1 },
+                    {file: buildAssetPath(allSprites["tree2"]), name:"Tree of Light", boost: 30, cORp: "community", klass:"trees", index:2 }
+                ]
                 },
         production: {
                 farms: [],
                 buildings: [],
                 houses: [
-                     {file: buildAssetPath(allSprites["house0"]), name:"shack", boost: 15, cORp: "production", klass:"houses", index:0 },
-                     {file: buildAssetPath(allSprites["house1"]), name:"better", boost: 25, cORp: "production", klass:"houses", index:1 },
-                     {file: buildAssetPath(allSprites["house2"]), name:"home", boost: 35, cORp: "production", klass:"houses", index:2 }
+                     {file: buildAssetPath(allSprites["house0"]), name:"Cold House", boost: 15, cORp: "production", klass:"houses", index:0 },
+                     {file: buildAssetPath(allSprites["house1"]), name:"Farm House", boost: 25, cORp: "production", klass:"houses", index:1 },
+                     {file: buildAssetPath(allSprites["house2"]), name:"Warm House", boost: 35, cORp: "production", klass:"houses", index:2 }
                 ],
                 energy: {
                         wind:[],
@@ -115,7 +132,8 @@ export const canvasEvents = (canvasHome, context) => {
 
     // When user selects from the drop down menu to place a sprite
     menu.addEventListener('change', () => {
-        console.log(playerPoints.resources)
+
+        console.log("resources",playerPoints.resources)
         // Remove error message if there is one
         removePlayerAlert()
 
@@ -127,16 +145,21 @@ export const canvasEvents = (canvasHome, context) => {
         
         //choiceStr is "production,houses,0"
         const choiceStr = menu.options[menu.selectedIndex].value
-        debugger
-        const okToRender = verifyBuildingMatch(choiceStr)
-        if(!okToRender) return false;
+        // debugger
+        console.log(onPlayerGrid[currentGrid[0]][currentGrid[1]])
+        const okToRender = verifyBuildingMatch(choiceStr, menu)
+        if(!okToRender){
+            console.log("can't draw")
+            menu.disabled = false;
+            menu.selectedIndex = null
+            return false;
+        } 
         
         //chosenBuilding is \
         //{isPresent: false, cORp: "", klass: "", level: null}
         const chosenBuilding = civilizationMenuSelect(choiceStr)
         const filePathBuild = chosenBuilding.file
-        console.log("PAY UP")
-        adjustResources(-20)
+        
         
 
         //place sprite if not occupied
@@ -145,14 +168,18 @@ export const canvasEvents = (canvasHome, context) => {
             if (isInitialBuilding(chosenBuilding) === true){
                 parseImage(context, filePathBuild, currentGrid)
                 occupyGrid(chosenBuilding)
+                console.log("PAY UP")
+                adjustResources(-20)
 
                 playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
-                debugger
+                // debugger
                 adjustPoints(playerPoints[chosenBuilding.cORp], context, chosenBuilding.cORp)
                 // adjustPoints(playerPoints.community, context)
                 // adjustPoints(playerPoints.production, context, "production")
+                // menu.disabled = false
             } else {
                 playerAlert.appendChild(generateErrorAlert("That building is not the first of it's kind!"))
+                // menu.disabled = false
             }
         } else if (isGridOccupied()){
              // Already a building on grid pos
@@ -188,7 +215,10 @@ export const canvasEvents = (canvasHome, context) => {
                      
                      parseImage(context, filePathBuild, currentGrid)
                      occupyGrid(chosenBuilding)
+                     console.log("PAY UP")
+                    adjustResources(-20)
                      playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
+                    //  menu.disabled = false
                  }
                 //   else if (chosenBuilding.index < objAtGridPos.level){
                 //      playerAlert.appendChild(generateErrorAlert("Try upgrading, we must not regret our past decisions"));
@@ -202,19 +232,24 @@ export const canvasEvents = (canvasHome, context) => {
 
 
         // reset default of dropdown
+            console.log("GO FALSE!")
+            menu.disabled = false
             menu.selectedIndex = null
-            console.log(playerPoints)
+            console.log("playerpoints", playerPoints)
 
 
 
 
     })
 
-    const verifyBuildingMatch = (choiceStr) => {
+    const verifyBuildingMatch = (choiceStr, menu) => {
         const x = currentGrid[0]
         const y = currentGrid[1]
+        menu.disabled = true
+        // debugger
 
         if(onPlayerGrid[x][y].isPresent === true){
+            debugger
             let optionsArr = choiceStr.split(",")
             let nextcORp = null
             let nextKlass = null;
@@ -224,6 +259,7 @@ export const canvasEvents = (canvasHome, context) => {
             
             const objAtGridPos = onPlayerGrid[x][y]
             const maxIndexOfType = civilization[nextcORp][nextKlass].length - 1
+            debugger
             console.log(maxIndexOfType)
             
             debugger
@@ -421,7 +457,7 @@ const parseImage = (context, filePath, currentGrid) =>{
 
 // FN will draw an image at the appropriate spot on the grid
 const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
-    console.log("draw on grid")
+    console.log("draw on grid", gridX, gridY)
         const offsetX = 22;
         const offsetY = 131;
         const topLeftX = 86;

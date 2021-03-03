@@ -12,34 +12,34 @@ export const adjustPoints = (points, context, style = "community") => {
 
     let fillPercentage; 
     switch(true){
-        case (points <= 42):
+        case (points <= 142):
             fillPercentage = 10;
             break;
-        case (points > 42 && points <= 84):
+        case (points > 142 && points <= 184):
             fillPercentage = 20;
             break;
-        case (points > 84 && points <= 126):
+        case (points > 184 && points <= 226):
             fillPercentage = 30;
             break;
-        case (points > 126 && points <= 168):
+        case (points > 226 && points <= 268):
             fillPercentage = 40;
             break;
-        case (points > 168 && points <= 210):
+        case (points > 268 && points <= 310):
             fillPercentage = 50;
             break;
-        case (points > 210 && points <= 252):
+        case (points > 310 && points <= 352):
             fillPercentage = 60;
             break;
-        case (points > 252 && points <= 294):
+        case (points > 352 && points <= 394):
             fillPercentage = 70;
             break;
-        case (points > 294 && points <= 336):
+        case (points > 394 && points <= 436):
             fillPercentage = 80;
             break;
-        case (points > 336 && points <= 378):
+        case (points > 436 && points <= 478):
             fillPercentage = 90;
             break;
-        case (points > 378):
+        case (points > 700):
             // debugger
             fillPercentage = 100;
             break
@@ -49,10 +49,10 @@ export const adjustPoints = (points, context, style = "community") => {
 
     if (style === "community"){
         //save to variable because garbage collection
-        debugger
+        // debugger
         const greenBar = new progressBar(context, -34, 105, "green", "v", fillPercentage);
     } else {
-        debugger
+        // debugger
         const blueBar = new progressBar(context, 590, 105, "blue", "v", fillPercentage);
     }
 }

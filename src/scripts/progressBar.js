@@ -68,14 +68,14 @@ class progressBar {
             const colorBarSrc = this.selectColor(this.color, orientation, this.value)
             this.colorSprite = new Image();
             this.colorSprite.src = colorBarSrc; 
-            debugger
+            // debugger
             const that = this;
             this.colorSprite.onload = (e) => {
 
                 // that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 278);
                 // 30 is good start
                 // that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 30);
-                debugger
+                // debugger
                 that.context.drawImage(that.colorSprite, that.startX, that.startY, 100, 400);
             }
 
