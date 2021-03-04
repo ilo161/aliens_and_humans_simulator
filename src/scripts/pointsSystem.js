@@ -4,7 +4,8 @@ import progressBar from "./progressBar.js"
 export const playerPoints = {
     community: 0,
     production: 0,
-    resources: 0
+    resources: 0,
+    alienTimer: 2
 }
 
 // cORp stands for community or production
@@ -65,6 +66,27 @@ export const adjustResources = (num) => {
     // debugger
     playerPoints.resources += num;
 }
+
+export const adjustTimer = (num) => {
+    // debugger
+    playerPoints.alienTimer += num;
+}
+
+export const setTimer = (num) => {
+    playerPoints.alienTimer = num
+}
+
+export const getTime = () => {
+    return playerPoints.alienTimer;
+}
+
+export const clearAlienText = (context) => {
+    const startX = ((context.canvas.width / 2) - 116);
+    // context.clearRect(startX, 30, 250, 80)
+    context.clearRect(startX, 0, 275, 80)
+}
+
+
 export const drawMidline = (context) => {
     const startX = ((context.canvas.width / 2))
     context.font = 'bold 30px Sans-Serif';
@@ -74,14 +96,33 @@ export const drawMidline = (context) => {
     context.fillText("|", startX, 10);
     context.strokeText("|", startX, 10);
 }
+export const drawAlienCountdown = (context) => {
+    const halfWidth = context.canvas.width / 2
+    const startX = ((context.canvas.width / 2) - 116);
+   
+    // context.clearRect(halfWidth-10, 35, (halfWidth-10 + 60), 65)
+    context.clearRect(startX, 0, 275, 80)
+
+    context.font = 'bold 30px Sans-Serif';
+    context.fillStyle = "#000"
+    context.strokeStyle = "#FFF";
+    // context.strokeStyle = "#55906F";
+    context.fillText("Aliens are coming!", startX, 30);
+    context.strokeText("Aliens are coming!", startX, 30);
+     
+    context.fillText(playerPoints.alienTimer, halfWidth-10, 60);
+    context.strokeText(playerPoints.alienTimer, halfWidth-10, 60);
+   
+}
+
 export const drawResourcesText = (context) => {
-    const startX = ((context.canvas.width / 2) - 102);
+    const startX = ((context.canvas.width / 2) - 108);
     context.clearRect(startX, 478, (startX + 350), 30)
 
     context.font = 'bold 30px Sans-Serif';
-    context.fillStyle = "#66A1E7"
-    // context.strokeStyle = "#C5E0CF";
-    context.strokeStyle = "#55906F";
+    context.fillStyle = "#000"
+    context.strokeStyle = "#C5E0CF";
+    // context.strokeStyle = "#55906F";
     context.fillText("Resources: " + playerPoints.resources, startX, 500);
     context.strokeText("Resources: " + playerPoints.resources, startX, 500);
     // requestAnimationFrame(drawResourcesText(context))

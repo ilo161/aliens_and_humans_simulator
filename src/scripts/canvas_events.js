@@ -1,7 +1,12 @@
 import AlienShip from "./alien_ship";
 import MotherShip from "./mothership";
 import {buildAssetPath} from "./util"
-import {playerPoints, adjustPoints, adjustResources} from "./pointsSystem"
+import {
+    playerPoints,
+    adjustPoints,
+    adjustResources,
+    adjustTimer
+} from "./pointsSystem"
 
 import {allSprites} from "./allSprites"
 
@@ -118,7 +123,7 @@ export const canvasEvents = (canvasHome, context) => {
 
     // When user selects from the drop down menu to place a sprite
     menu.addEventListener('click', (e) => {
-        console.log(e.target)
+        removePlayerAlert()
         // debugger
         if (allDropDownCategories.includes(e.target) ){
             playerAlert.appendChild(generateErrorAlert("That is not a building"))
@@ -127,7 +132,7 @@ export const canvasEvents = (canvasHome, context) => {
 
         console.log("resources",playerPoints.resources)
         // Remove error message if there is one
-        removePlayerAlert()
+        
 
         if (playerPoints.resources < 20){
             playerAlert.appendChild(generateErrorAlert("Every building costs 20 resources ... !"))
@@ -137,12 +142,12 @@ export const canvasEvents = (canvasHome, context) => {
         
         //choiceStr is "production,houses,0"
         const choiceStr = menu.options[menu.selectedIndex].value
-        console.log("choicStr",choiceStr)
+
         if (!choiceStr.includes(",")){
             playerAlert.appendChild(generateErrorAlert("That is not a building"))
             return false;
         } 
-        console.log(onPlayerGrid[currentGrid[0]][currentGrid[1]])
+        // console.log(onPlayerGrid[currentGrid[0]][currentGrid[1]])
         const okToRender = verifyBuildingMatch(choiceStr, menu)
         if (!okToRender){
             console.log("can't draw")
@@ -245,7 +250,7 @@ export const canvasEvents = (canvasHome, context) => {
         // debugger
 
         if(onPlayerGrid[x][y].isPresent === true){
-            debugger
+
             let optionsArr = choiceStr.split(",")
             let nextcORp = null
             let nextKlass = null;
@@ -255,10 +260,10 @@ export const canvasEvents = (canvasHome, context) => {
             
             const objAtGridPos = onPlayerGrid[x][y]
             const maxIndexOfType = civilization[nextcORp][nextKlass].length - 1
-            debugger
-            console.log(maxIndexOfType)
+
+
             
-            debugger
+
             if(objAtGridPos.cORp !== nextcORp || objAtGridPos.klass !== nextKlass){
                 playerAlert.appendChild(generateErrorAlert("Building types must match!"))
                 return false;
@@ -277,7 +282,10 @@ export const canvasEvents = (canvasHome, context) => {
                  } else if (nextIndex < objAtGridPos.level){
                      playerAlert.appendChild(generateErrorAlert("Try upgrading, we must not regret our past decisions"));
                      return false;
-                 }
+                 } else if((objAtGridPos.level + 1) !== nextIndex){
+                     playerAlert.appendChild(generateErrorAlert("Upgrade one level at a time!"));
+                     return false;
+                } 
             }
             // else if ()
         }

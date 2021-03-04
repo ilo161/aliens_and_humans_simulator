@@ -8,6 +8,11 @@ import "./styles/index.scss";
 
 import {
     drawResourcesText,
+    drawAlienCountdown,
+    clearAlienText,
+    adjustTimer,
+    getTime,
+    setTimer,
     drawMidline,
     spawnResources} from "./scripts/pointsSystem";
 
@@ -28,6 +33,17 @@ document.addEventListener("DOMContentLoaded", () =>  {
     const blankRight = new progressBar(context, 590, 115, "blank", "v");
     // debugger
     drawMidline(context)
+
+    const makeCountdownId = setInterval(() => {
+        adjustTimer(-1);
+        drawAlienCountdown(context);
+        if(getTime() === 0){
+            clearAlienText(context)
+            clearInterval(makeCountdownId)
+            summonAliens(context)
+        }
+    },1000)
+
     const makeResourcesId = setInterval(() => {
         spawnResources();
         drawResourcesText(context);
@@ -64,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () =>  {
     // productionBar.increaseFill()
     // progressBar(context, 626, 476, "blue")
 
-    // summonAliens(context)
+    
     
 
     
