@@ -23,6 +23,13 @@ import tree2 from "../images/community/trees/02tree_of_light.png";
 
 
 //Production
+import energy0 from "../images/production/energy/00water_wheel.png";
+import energy1 from "../images/production/energy/01windmill.png";
+import energy2 from "../images/production/energy/02tesla_tower.png";
+import energy3 from "../images/production/energy/03nuclear.png";
+import energy4 from "../images/production/energy/04nuclear.png";
+
+
 import house0 from "../images/production/houses/00shack.png";
 import house1 from "../images/production/houses/01butcher.png";
 import house2 from "../images/production/houses/02house.png";
@@ -30,22 +37,28 @@ import house2 from "../images/production/houses/02house.png";
 
 export const allSprites = {
     "fountain0": fountain0,
-    "m":"meditation",
+    "---m":"meditation",
     "meditate0": meditate0,
     "meditate1": meditate1,
     "meditate2": meditate2,
     "pyramid0": pyramid0,
     "pyramid1": pyramid1,
     "pyramid2": pyramid2,
-    "t":"trees",
+    "---trees":"trees",
     "tree0": tree0,
     "tree1": tree1,
     "tree2": tree2,
-    "ruin": "ruin",
+    "---ruin": "ruin",
     "ruin0": ruin0,
     "ruin1": ruin1,
     "ruin2": ruin2,
     "p":"production",
+    "---energy": "energy",
+    "energy0": energy0,
+    "energy1": energy1,
+    "energy2": energy2,
+    "energy3": energy3,
+    "energy4": energy4,
     "house0": house0,
     "house1": house1,
     "house2": house2,

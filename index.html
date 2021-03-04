@@ -13,60 +13,73 @@
 
 <body>
     
-    <!-- <div class="canvas-container" > -->
-        <div class="gamebox">
-            <canvas id="canvas-home" height='505px' width='646px'></canvas>
+    <div class="master-container" >
+        <div class="content-container">
+        <div class="content-wrapper">
+            <div class="scroll-wrapper">
+                <img src="./src/images/background/01scroll.png" class="scroll"></img>
+                <section class="playerAlert"></section>
+            </div>
+            <div class="gamebox">
             
+                <canvas id="canvas-home" height='505px' width='646px'></canvas>
+                
+            </div>         
             <div class="right-side-bar">
-
+            
                 <div class="drop-down-container hidden">
                     <select class="civilization-menu">
-                        <option class="select-title" disabled selected >Select upgrade</option>
-                        <optgroup class="production" label="Production">
-                            <optgroup class="cat" label="--Houses--">
-                                <option class="nocat" name="production[houses]" value="production,houses,0">Cold House</option>
-                                <option class="nocat" name="production[houses]" value="production,houses,1">Farm House</option>
-                                <option class="nocat" name="production[houses]" value="production,houses,2">Warm House</option>
-                            <!-- <option disabled value="88">Hi Andy</option> -->
+                        <option class="select-title cat" disabled selected>Select upgrade</option>
+                        <optgroup class="production cat" label="Production">
+                            <!-- Energy -->
+                        <optgroup class="cat" label="--Energy--">
+                            <option class="nocat" name="production[energy]" value="production,energy,0">Water Wheel</option>
+                            <option class="nocat" name="production[energy]" value="production,energy,1">Wind Mill</option>
+                            <option class="nocat" name="production[energy]" value="production,energy,2">Tesla Tower</option>
+                            <option class="nocat" name="production[energy]" value="production,energy,3">Nuclear</option>
+                            <option class="nocat" name="production[energy]" value="production,energy,4">Smart Nuclear</option>
                         </optgroup>
-                        <optgroup class="community" label="Community">
+                        <optgroup class="cat" label="--Houses--">
+                            <option class="nocat" name="production[houses]" value="production,houses,0">Cold House</option>
+                            <option class="nocat" name="production[houses]" value="production,houses,1">Farm House</option>
+                            <option class="nocat" name="production[houses]" value="production,houses,2">Warm House</option>
+                        </optgroup>
+                        <optgroup class="community cat" label="Community">
                             <!-- Fountains -->
                         <optgroup class="cat" label="--Fountains--">
                             <option class="nocat" name="community[fountains]" value="community,fountains,0">Dual Fountains</option>
                         </optgroup>
-                            <!-- Meditations -->
+                        <!-- Meditations -->
                         <optgroup class="cat" label="--Meditations--">
                             <option class="nocat" name="community[meditations]" value="community,meditations,0">In Ruins</option>
                             <option class="nocat" name="community[meditations]" value="community,meditations,1">Enlightened</option>
-                            <option class="nocat" name="community[meditations]" value="community,meditations,2">Activated</option>                
+                            <option class="nocat" name="community[meditations]" value="community,meditations,2">Activated</option>
                         </optgroup>
-                            <!-- Pyramids -->
+                        <!-- Pyramids -->
                         <optgroup class="cat" label="--Pyramids--">
                             <option class="nocat" name="community[pyramids]" value="community,pyramids,0">Red Pyramid</option>
                             <option class="nocat" name="community[pyramids]" value="community,pyramids,1">Golden Pyramid</option>
-                            <option class="nocat" name="community[pyramids]" value="community,pyramids,2">Pyramid of Light</option>                
+                            <option class="nocat" name="community[pyramids]" value="community,pyramids,2">Pyramid of Light</option>
                         </optgroup>
-                            <!-- Ruins -->
+                        <!-- Ruins -->
                         <optgroup class="cat" label="--Ruins--">
                             <option class="nocat" name="community[ruins]" value="community,ruins,0">Yellow Slab</option>
                             <option class="nocat" name="community[ruins]" value="community,ruins,1">Rainbow Rock</option>
-                            <option class="nocat" name="community[ruins]" value="community,ruins,2">Stone of Light</option>                
+                            <option class="nocat" name="community[ruins]" value="community,ruins,2">Stone of Light</option>
                         </optgroup>
-                            <!-- Trees -->
+                        <!-- Trees -->
                         <optgroup class="cat" label="--Trees--">
-                            <option class="nocat" name="community[trees]" value="community,trees,0">Small Tree</option>                
-                            <option class="nocat" name="community[trees]" value="community,trees,1">Mighty Tree</option>                
-                            <option class="nocat" name="community[trees]" value="community,trees,2">Tree of Light</option>                
+                            <option class="nocat" name="community[trees]" value="community,trees,0">Small Tree</option>
+                            <option class="nocat" name="community[trees]" value="community,trees,1">Mighty Tree</option>
+                            <option class="nocat" name="community[trees]" value="community,trees,2">Tree of Light</option>
                         </optgroup>
                     </select>
                 </div>
             </div>
-
-        </div>         
-        <img src="./src/images/background/wallpaper.png" alt="colors rainbow" class="pattern-color">
-        <section class="playerAlert"></section>
-
-    <!-- </div> -->
+            <img src="./src/images/background/wallpaper.png" alt="colors rainbow" class="pattern-color">
+         </div>
+        </div>
+    </div>
    
 
 

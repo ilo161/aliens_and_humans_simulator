@@ -6,7 +6,10 @@ import {animateSquares,
 import progressBar from "./scripts/progressBar.js"
 import "./styles/index.scss";
 
-import {drawResourcesText, spawnResources} from "./scripts/pointsSystem";
+import {
+    drawResourcesText,
+    drawMidline,
+    spawnResources} from "./scripts/pointsSystem";
 
 
 
@@ -24,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () =>  {
     const blankLeft = new progressBar(context, -34, 115, "blank", "v");
     const blankRight = new progressBar(context, 590, 115, "blank", "v");
     // debugger
+    drawMidline(context)
     const makeResourcesId = setInterval(() => {
         spawnResources();
         drawResourcesText(context);

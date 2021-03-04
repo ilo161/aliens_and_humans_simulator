@@ -1,44 +1,23 @@
-console.log("hello from canvas events")
 import AlienShip from "./alien_ship";
 import MotherShip from "./mothership";
 import {buildAssetPath} from "./util"
 import {playerPoints, adjustPoints, adjustResources} from "./pointsSystem"
 
-//works
-// import pyramid0 from "../images/community/pyramids/00red_pyramid.png"
-// import pyramid1 from "../images/community/pyramids/01golden_pyramid.png"
-// import pyramid2 from "../images/community/pyramids/02light_pyramid.png"
-
 import {allSprites} from "./allSprites"
 
-// import pyramid0 from "../images/community/pyramids/01pyramid.svg"
-
 import grassD from "../images/terrain_grass/grass_mix_d.jpg"
+// import grassD from "../images/terrain_grass/midgrass.jpg"
 
 // //ex: [3,4]
 let currentGrid = undefined;
-
-
-// function buildAssetPath(imgSrc) {
-//     return `./dist/${imgSrc}`;
-// }
 
 //This is a generic grass square preloaded with source path
 const grassSquare = new Image()
 grassSquare.src = buildAssetPath(grassD)
 
-// const playerPoints = {
-//     community: 0,
-//     production: 0,
-//     resources: 0
-// }
-
 // skeleton for onPlayerGrid
 //{isPresent: false, cORp: "", klass: "", level: null}
 const onPlayerGrid = buildPlayerState()
-
-
-// console.log(onPlayerGrid)
 
 // This function builds an object containing all the coordinates of the play grid and 
 // stores state of what the player has played
@@ -90,16 +69,20 @@ const civilization = {
         production: {
                 farms: [],
                 buildings: [],
+                  energy: [
+                    {file: buildAssetPath(allSprites["energy0"]), name:"Water Wheel", boost: 15, cORp: "production", klass:"energy", index:0 },
+                    {file: buildAssetPath(allSprites["energy1"]), name:"Wind Mill", boost: 25, cORp: "production", klass:"energy", index:1 },
+                    {file: buildAssetPath(allSprites["energy2"]), name:"Tesla Tower", boost: 35, cORp: "production", klass:"energy", index:2 },
+                    {file: buildAssetPath(allSprites["energy3"]), name:"Nuclear", boost: 45, cORp: "production", klass:"energy", index:3 },
+                    {file: buildAssetPath(allSprites["energy4"]), name:"Efficient Nuclear", boost: 55, cORp: "production", klass:"energy", index:4 }
+
+                  ],
                 houses: [
                      {file: buildAssetPath(allSprites["house0"]), name:"Cold House", boost: 15, cORp: "production", klass:"houses", index:0 },
                      {file: buildAssetPath(allSprites["house1"]), name:"Farm House", boost: 25, cORp: "production", klass:"houses", index:1 },
                      {file: buildAssetPath(allSprites["house2"]), name:"Warm House", boost: 35, cORp: "production", klass:"houses", index:2 }
-                ],
-                energy: {
-                        wind:[],
-                        solar:[],
-                        hydro:[]
-                }
+                    ],
+                  
         }
 }
 
@@ -108,6 +91,9 @@ export const canvasEvents = (canvasHome, context) => {
     //dropdown on right side
     let menuContainer = document.getElementsByClassName("drop-down-container")[0]
     let menu = document.getElementsByClassName("civilization-menu")[0]
+    const allDropDownCategories = Array.from(document.getElementsByClassName("cat"));
+    const mainDropDown = Array.from(menu);
+    // let menu = document.getElementsByClassName("nocat")[0]
     const playerAlert = document.getElementsByClassName("playerAlert")[0]
     
     //When user clicks on grid it sets currentGrid. If they click outside, it returns
@@ -131,7 +117,13 @@ export const canvasEvents = (canvasHome, context) => {
     })
 
     // When user selects from the drop down menu to place a sprite
-    menu.addEventListener('change', () => {
+    menu.addEventListener('click', (e) => {
+        console.log(e.target)
+        // debugger
+        if (allDropDownCategories.includes(e.target) ){
+            playerAlert.appendChild(generateErrorAlert("That is not a building"))
+            return false;
+        }
 
         console.log("resources",playerPoints.resources)
         // Remove error message if there is one
@@ -139,19 +131,23 @@ export const canvasEvents = (canvasHome, context) => {
 
         if (playerPoints.resources < 20){
             playerAlert.appendChild(generateErrorAlert("Every building costs 20 resources ... !"))
-            menu.selectedIndex = null; 
+            // menu.selectedIndex = null; 
             return false
         } 
         
         //choiceStr is "production,houses,0"
         const choiceStr = menu.options[menu.selectedIndex].value
-        // debugger
+        console.log("choicStr",choiceStr)
+        if (!choiceStr.includes(",")){
+            playerAlert.appendChild(generateErrorAlert("That is not a building"))
+            return false;
+        } 
         console.log(onPlayerGrid[currentGrid[0]][currentGrid[1]])
         const okToRender = verifyBuildingMatch(choiceStr, menu)
-        if(!okToRender){
+        if (!okToRender){
             console.log("can't draw")
             menu.disabled = false;
-            menu.selectedIndex = null
+            // menu.selectedIndex = null
             return false;
         } 
         
@@ -234,7 +230,7 @@ export const canvasEvents = (canvasHome, context) => {
         // reset default of dropdown
             console.log("GO FALSE!")
             menu.disabled = false
-            menu.selectedIndex = null
+            // menu.selectedIndex = null
             console.log("playerpoints", playerPoints)
 
 

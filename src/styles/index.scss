@@ -1,7 +1,23 @@
 body{
     background-image: url("../images/background/wallpaper.png");
+}
+
+.master-container{
+    text-align: center;
+}
+
+.content-container{
+
+    display:inline-block
+}
+.content-wrapper{
+   
+    display:flex;
+
+
 
 }
+
 .select-title{
     text-align:center;
     background-color: rgb(158, 253, 255);
@@ -69,38 +85,28 @@ select{
 }
 
 .gamebox{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    width: 646px;
-    margin-left: 0px;
-
-    border: 1px solid pink;
+   margin:0 10px;
+   width: min(656px);
+    
 }
 
 #canvas-home{
-    width: 100%;
-    height: auto;
+
+
     background-color: #fc575e;
     border: 5px solid black;
     background-image: linear-gradient(40deg, #fc575e 0%, #90d5ec 74%);
 }
 
 .right-side-bar{
-    width: 142px;
-    height: 500px;
-    position: relative;
-    border: 1px solid red
+    display:flex;
+    flex-direction: column;
+
+    width: 180px;
 }
 .drop-down-container{
-    position: absolute;
-    width: 142px;
-    height: 505px;
-    
-    left: 30px;
-    top: 0px;
-
-    border: 1px solid yellow;
+    width: inherit;
+    height: 515px;
     display: block;
 }
 
@@ -109,10 +115,20 @@ select{
         height: 100%;
     }
 
+.scroll-wrapper{
+    margin: 100px 0 0 0;
+}
 
+.scroll{
+    width: 180px;
+    height: auto;
+}
 
 .playerAlert{
-    font-size: 16;
+    position: absolute;
+    overflow-wrap: break-word;
+    width: 200px;
+    font-size: 25;
     font-family: 'Courier New', Courier, monospace;
     font-weight: bolder;
     margin: 0 auto;

@@ -65,7 +65,15 @@ export const adjustResources = (num) => {
     // debugger
     playerPoints.resources += num;
 }
-
+export const drawMidline = (context) => {
+    const startX = ((context.canvas.width / 2))
+    context.font = 'bold 30px Sans-Serif';
+    context.fillStyle = "#66A1E7"
+    // context.strokeStyle = "#C5E0CF";
+    context.strokeStyle = "#55906F";
+    context.fillText("|", startX, 10);
+    context.strokeText("|", startX, 10);
+}
 export const drawResourcesText = (context) => {
     const startX = ((context.canvas.width / 2) - 102);
     context.clearRect(startX, 478, (startX + 350), 30)
