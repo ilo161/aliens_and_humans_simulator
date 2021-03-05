@@ -51,10 +51,11 @@ export const adjustPoints = (points, context, style = "community") => {
     if (style === "community"){
         //save to variable because garbage collection
         // debugger
-        const greenBar = new progressBar(context, -34, 105, "green", "v", fillPercentage);
+        // const greenBar = new progressBar(context, -34, 105, "green", "v", fillPercentage);
+        const greenBar = new progressBar(context, -31, 105, "green", "v", fillPercentage);
     } else {
         // debugger
-        const blueBar = new progressBar(context, 590, 105, "blue", "v", fillPercentage);
+        const blueBar = new progressBar(context, 612, 105, "blue", "v", fillPercentage);
     }
 }
 
@@ -96,6 +97,7 @@ export const drawMidline = (context) => {
     context.fillText("|", startX, 10);
     context.strokeText("|", startX, 10);
 }
+
 export const drawAlienCountdown = (context) => {
     const halfWidth = context.canvas.width / 2
     const startX = ((context.canvas.width / 2) - 116);
@@ -117,14 +119,17 @@ export const drawAlienCountdown = (context) => {
 
 export const drawResourcesText = (context) => {
     const startX = ((context.canvas.width / 2) - 108);
-    context.clearRect(startX, 478, (startX + 350), 30)
+    const startY = 522;
+    // context.clearRect(startX, 478, (startX + 350), 30)
+    context.clearRect(startX, 500, (startX + 350), 30)
 
     context.font = 'bold 30px Sans-Serif';
     context.fillStyle = "#000"
-    context.strokeStyle = "#C5E0CF";
-    // context.strokeStyle = "#55906F";
-    context.fillText("Resources: " + playerPoints.resources, startX, 500);
-    context.strokeText("Resources: " + playerPoints.resources, startX, 500);
+    context.strokeStyle = "#FFF";
+    // context.strokeStyle = "#C5E0CF";
+
+    context.fillText("Resources: " + playerPoints.resources, startX, startY);
+    context.strokeText("Resources: " + playerPoints.resources, startX, startY);
     // requestAnimationFrame(drawResourcesText(context))
 
   }

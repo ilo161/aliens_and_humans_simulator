@@ -11,14 +11,20 @@ import {
 import {allSprites} from "./allSprites"
 
 import grassD from "../images/terrain_grass/grass_mix_d.jpg"
+import cursorPng from "../images/cursor.png"
 // import grassD from "../images/terrain_grass/midgrass.jpg"
 
 // //ex: [3,4]
 let currentGrid = undefined;
+let previousGrid = undefined;
 
 //This is a generic grass square preloaded with source path
-const grassSquare = new Image()
+export const grassSquare = new Image()
 grassSquare.src = buildAssetPath(grassD)
+
+// This is the cursor icon, preloaded with source path
+export const cursor = new Image()
+cursor.src = buildAssetPath(cursorPng)
 
 // skeleton for onPlayerGrid
 //{isPresent: false, cORp: "", klass: "", level: null}
@@ -107,15 +113,48 @@ export const canvasEvents = (canvasHome, context) => {
         currentGrid = getCoords(e);
 
         if(currentGrid && Array.from(menuContainer.classList).includes("hidden")){
+            const x = currentGrid[0];
+            const y = currentGrid[1];
+
             //show dropdown if user clicks in playgrid
             menuContainer.classList.toggle("hidden")
 
             const len = menu.options.length;
             menu.setAttribute('size', len);
+            if(!isGridOccupied()){
+                previousGrid = currentGrid
+                console.log("previous grid", previousGrid)
+                //draw crosshair
+                drawOnGrid(cursor, context, x, y)
+            }
 
+        } else if(currentGrid && !Array.from(menuContainer.classList).includes("hidden")){
+            if(!isGridOccupied()){
+                const x = currentGrid[0];
+                const y = currentGrid[1];
+                const prevX = previousGrid[0];
+                const prevY = previousGrid[1];
+                
+
+                //remove crosshair cursor iff the previous grid wasn't built on.
+                if(!isGridOccupied(prevX, prevY)){
+                    drawOnGrid(grassSquare, context, prevX, prevY, true)
+                }
+                // draw new crosshair
+                previousGrid = currentGrid
+                drawOnGrid(cursor, context, x, y)
+                console.log("CORRECT")
+            }
         } else if (currentGrid === undefined && !Array.from(menuContainer.classList).includes("hidden")) {
+            const prevX = previousGrid[0];
+            const prevY = previousGrid[1];
+            
+            //remove crosshair cursor
+            drawOnGrid(grassSquare, context, prevX, prevY, true)
+            previousGrid = undefined;
             //hide dropdown if user clicks outside play grid            
             menuContainer.classList.toggle("hidden")
+
         } 
         console.log(`currentGrid: ${currentGrid}`)
     
@@ -331,15 +370,22 @@ export const canvasEvents = (canvasHome, context) => {
         let px = e.pageX;
         let py = e.pageY;
 
+        console.log("-------")
+        console.log("px", px)
+        console.log("py", py)
+
         cx = px - canvasRect.left
         cy = py - canvasRect.top
         console.log(canvasRect)
 
         console.log("-------")
-        console.log(cx)
-        console.log(cy)
-        const col = Math.floor((cx - 22) / 86) ;
-        const row = Math.floor((cy - 131) / 86) ;
+        console.log("cx", cx)
+        console.log("cy",cy)
+        // const col = Math.floor((cx - 22) / 86) ;
+        // const row = Math.floor((cy - 131) / 86) ;
+
+        const col = Math.floor((cx - 49) / 86) ;
+        const row = Math.floor((cy - 138) / 86) ;
 
         // current location console.log
         console.log(`X: [${row}, Y: ${col}]`)
@@ -387,10 +433,14 @@ export const drawGrass = (context) => {
 
         img1.onload = () => {
 
-            drawRow(context, img1, 22, 131)
-            drawRow(context, img1, 22, 217)
-            drawRow(context, img1, 22, 303)
-            drawRow(context, img1, 22, 389)
+            // drawRow(context, img1, 22, 131)
+            // drawRow(context, img1, 22, 217)
+            // drawRow(context, img1, 22, 303)
+            // drawRow(context, img1, 22, 389)
+            drawRow(context, img1, 44, 131)
+            drawRow(context, img1, 44, 217)
+            drawRow(context, img1, 44, 303)
+            drawRow(context, img1, 44, 389)
 
         }
     
@@ -406,9 +456,38 @@ export const drawGrass = (context) => {
     }
 }
 
-const isGridOccupied = () => {
-    const x = currentGrid[0]
-    const y = currentGrid[1]
+export const drawLetterNum = (context) => {
+    const alpha = ["A", "B", "C", "D"]
+    const numeric = [1, 2, 3, 4, 5, 6, 7]
+    // coordinates for Letters on left side
+    const startAlphaX = 32;
+    let startAlphaY = 177;
+    // coordinates for numbers on bottom of board
+    let startNumX = 83;
+    const startNumY = 489;
+
+    context.font = 'bold 13px Sans-Serif';
+    // context.fillStyle = "#000"
+    context.fillStyle = "#FFF"
+    context.strokeStyle = "#FFF";
+    for(let i = 0; i < alpha.length; i++){
+        context.fillText(alpha[i], startAlphaX, startAlphaY);
+        startAlphaY += 86;
+
+    }
+
+    for (let i = 0; i < numeric.length; i++) {
+        context.fillText(numeric[i], startNumX, startNumY);
+        startNumX += 86;
+
+        
+    }
+    // context.strokeText(alpha[0], startX, 164);
+}
+
+const isGridOccupied = (x = currentGrid[0], y = currentGrid[1]) => {
+    // const x = currentGrid[0]
+    // const y = currentGrid[1]
 
     return onPlayerGrid[x][y].isPresent
 }
@@ -449,9 +528,11 @@ const parseImage = (context, filePath, currentGrid) =>{
     let image = new Image();
     image.src = filePath;
 
-    const x = currentGrid[0]
-    const y = currentGrid[1]
+    const x = currentGrid[0];
+    const y = currentGrid[1];
 
+    // remove crosshair before placing new sprite
+    drawOnGrid(grassSquare, context, x, y, true);
 
     image.onload = () => {        
         drawOnGrid(image, context, x, y)
@@ -462,8 +543,11 @@ const parseImage = (context, filePath, currentGrid) =>{
 // FN will draw an image at the appropriate spot on the grid
 const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
     console.log("draw on grid", gridX, gridY)
-        const offsetX = 22;
+        // const offsetX = 22;
         const offsetY = 131;
+        const offsetX = 44;
+
+        // const offsetY = 136;
         const topLeftX = 86;
         const topLeftY = 86;    
 
@@ -472,7 +556,7 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
             //works and original func
             // context.drawImage(image, offsetX, offsetY, image.width /11.9, image.height / 11.9 )
             if (clearRectBoolean){
-                
+                debugger
                 context.clearRect(offsetX, offsetY, 86, 86)
                 context.drawImage(image, offsetX, offsetY, 86, 86)
             } else {
@@ -510,16 +594,17 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
     
     }
 
-    // export const animateSquares = (image, cb) => {
-    //     context.clearRect(0, 0, 646, 505)
-    //     for(let i = 0; i < 4; i++){
-    //         for(let j = 0; j < 7; j++){
-    //             drawOnGrid(image, i, j)
+    export const animateSquares = (image, context) => {
+        context.clearRect(44, 131, 602, 344)
+        for(let i = 0; i < 4; i++){
+            for(let j = 0; j < 7; j++){
+                drawOnGrid(grassSquare, context, i, j)
+                drawOnGrid(image, context, i, j)
                 
-    //         }
-    //     }
+            }
+        }
 
-    // }
+    }
 
     // export const loadAlienShip = () => {
     //     // const alienSrc = "/src/images/aliens/ships/08-Netuno.png";

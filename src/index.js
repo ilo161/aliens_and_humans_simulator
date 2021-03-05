@@ -1,10 +1,20 @@
 import {animateSquares,
-     canvasEvents,
-      drawGrass,
-       drawOnGrid,
-    summonAliens} from "./scripts/canvas_events.js"
+        canvasEvents,
+        drawGrass,
+        drawLetterNum,
+        drawOnGrid,
+        summonAliens,
+        grassSquare,
+        cursor
+        } from "./scripts/canvas_events.js"
+
 import progressBar from "./scripts/progressBar.js"
+import {buildAssetPath} from "./scripts/util"
 import "./styles/index.scss";
+
+
+// import cursorPng from "./images/cursor.png"
+
 
 import {
     drawResourcesText,
@@ -16,7 +26,9 @@ import {
     drawMidline,
     spawnResources} from "./scripts/pointsSystem";
 
-
+// This is the cursor icon, preloaded with source path
+// const cursor = new Image()
+// cursor.src = buildAssetPath(cursorPng)
 
 
 document.addEventListener("DOMContentLoaded", () =>  {
@@ -28,16 +40,25 @@ document.addEventListener("DOMContentLoaded", () =>  {
     drawGrass(context)
     //draw Production progress bar
     // y is 375
+    // old
     // const blankLeft = new progressBar(context, -34, 125, "blank", "v")
-    const blankLeft = new progressBar(context, -34, 115, "blank", "v");
-    const blankRight = new progressBar(context, 590, 115, "blank", "v");
+    // pre resize
+    // const blankLeft = new progressBar(context, -34, 115, "blank", "v");
+    
+    
+    const blankLeft = new progressBar(context, -31, 115, "blank", "v");
+    // const blankRight = new progressBar(context, 590, 115, "blank", "v");
+    const blankRight = new progressBar(context, 612, 115, "blank", "v");
     // debugger
     drawMidline(context)
-
+    drawLetterNum(context)
+    
     const makeCountdownId = setInterval(() => {
         adjustTimer(-1);
         drawAlienCountdown(context);
         if(getTime() === 0){
+            // context.clearRect(44,389,86,86)
+            animateSquares(cursor, context)
             clearAlienText(context)
             clearInterval(makeCountdownId)
             summonAliens(context)
