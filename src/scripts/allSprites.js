@@ -23,17 +23,29 @@ import tree2 from "../images/community/trees/02tree_of_light.png";
 
 
 //Production
+
+import biz0 from "../images/production/business/00merchant_tent.png";
+import biz1 from "../images/production/business/01department_store.png";
+import biz2 from "../images/production/business/02skyscraper.png";
+
 import energy0 from "../images/production/energy/00water_wheel.png";
 import energy1 from "../images/production/energy/01windmill.png";
 import energy2 from "../images/production/energy/02tesla_tower.png";
 import energy3 from "../images/production/energy/03nuclear.png";
 import energy4 from "../images/production/energy/04nuclear.png";
 
+import flight0 from "../images/production/flight/01hot_air_balloon.png";
+import flight1 from "../images/production/flight/02toy_helicopter.png";
+import flight2 from "../images/production/flight/03airplane.png";
+import flight3 from "../images/production/flight/04jet.png";
 
 import house0 from "../images/production/houses/00shack.png";
 import house1 from "../images/production/houses/01butcher.png";
 import house2 from "../images/production/houses/02house.png";
 
+import weapon0 from "../images/production/weapons/01defensive_missile.png";
+import weapon1 from "../images/production/weapons/02attack_missile.png";
+import weapon2 from "../images/production/weapons/03mind_control.png";
 
 export const allSprites = {
     "fountain0": fountain0,
@@ -52,14 +64,28 @@ export const allSprites = {
     "ruin0": ruin0,
     "ruin1": ruin1,
     "ruin2": ruin2,
-    "p":"production",
+    "p":"PRODUCTION",
+    "---biz":"business",
+    "biz0": biz0,
+    "biz1": biz1,
+    "biz2": biz2,
     "---energy": "energy",
     "energy0": energy0,
     "energy1": energy1,
     "energy2": energy2,
     "energy3": energy3,
     "energy4": energy4,
+    "---flight":"flight",
+    "flight0": flight0,
+    "flight1": flight1,
+    "flight2": flight2,
+    "flight3": flight3,
+    "---house": "house",
     "house0": house0,
     "house1": house1,
     "house2": house2,
+    "--weapon":"weapon",
+    "weapon0": weapon0,
+    "weapon1": weapon1,
+    "weapon2": weapon2
 }

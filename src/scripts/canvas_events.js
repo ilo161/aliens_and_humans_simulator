@@ -17,6 +17,7 @@ import cursorPng from "../images/cursor.png"
 // //ex: [3,4]
 let currentGrid = undefined;
 let previousGrid = undefined;
+let onMobile = false;
 
 //This is a generic grass square preloaded with source path
 export const grassSquare = new Image()
@@ -79,20 +80,34 @@ const civilization = {
                 },
         production: {
                 farms: [],
-                buildings: [],
+                business: [
+                    {file: buildAssetPath(allSprites["biz0"]), name:"Fruit Stand", boost: 15, cORp: "production", klass:"business", index:0 },
+                    {file: buildAssetPath(allSprites["biz1"]), name:"Mall", boost: 25, cORp: "production", klass:"business", index:1 },
+                    {file: buildAssetPath(allSprites["biz2"]), name:"Skyscraper", boost: 90, cORp: "production", klass:"business", index:2 }
+                ],
                   energy: [
                     {file: buildAssetPath(allSprites["energy0"]), name:"Water Wheel", boost: 15, cORp: "production", klass:"energy", index:0 },
                     {file: buildAssetPath(allSprites["energy1"]), name:"Wind Mill", boost: 25, cORp: "production", klass:"energy", index:1 },
                     {file: buildAssetPath(allSprites["energy2"]), name:"Tesla Tower", boost: 35, cORp: "production", klass:"energy", index:2 },
                     {file: buildAssetPath(allSprites["energy3"]), name:"Nuclear", boost: 45, cORp: "production", klass:"energy", index:3 },
                     {file: buildAssetPath(allSprites["energy4"]), name:"Efficient Nuclear", boost: 55, cORp: "production", klass:"energy", index:4 }
-
+                  ],
+                  flight:[
+                    {file: buildAssetPath(allSprites["flight0"]), name:"Hot Air Balloon", boost: 15, cORp: "production", klass:"flight", index:0},
+                    {file: buildAssetPath(allSprites["flight1"]), name:"Helicopter", boost: 25, cORp: "production", klass:"flight", index:1},
+                    {file: buildAssetPath(allSprites["flight2"]), name:"Airplane", boost: 35, cORp: "production", klass:"flight", index:2},
+                    {file: buildAssetPath(allSprites["flight3"]), name:"Jet", boost: 45, cORp: "production", klass:"flight", index:3},
                   ],
                 houses: [
                      {file: buildAssetPath(allSprites["house0"]), name:"Cold House", boost: 15, cORp: "production", klass:"houses", index:0 },
                      {file: buildAssetPath(allSprites["house1"]), name:"Farm House", boost: 25, cORp: "production", klass:"houses", index:1 },
                      {file: buildAssetPath(allSprites["house2"]), name:"Warm House", boost: 35, cORp: "production", klass:"houses", index:2 }
                     ],
+                weapons: [
+                     {file: buildAssetPath(allSprites["weapon0"]), name:"Defense Missle", boost: 15, cORp: "production", klass:"weapons", index:0 },
+                     {file: buildAssetPath(allSprites["weapon1"]), name:"Attack Missle", boost: 25, cORp: "production", klass:"weapons", index:1 },
+                     {file: buildAssetPath(allSprites["weapon2"]), name:"Mind Control", boost: 35, cORp: "production", klass:"weapons", index:2 }
+                ],
                   
         }
 }
@@ -208,7 +223,9 @@ export const canvasEvents = (canvasHome, context) => {
         console.log(`previousGrid: ${previousGrid}`)
     
     })
-
+    if ( /Android|webOS|iPhone|iPod|Blackberry|Windows Phone/i.test(navigator.userAgent)){
+       onMobile = true;
+    }
     // When user selects from the drop down menu to place a sprite
     menu.addEventListener('click', (e) => {
         // Remove error message if there is one
@@ -264,7 +281,10 @@ export const canvasEvents = (canvasHome, context) => {
             console.log("choiceStr", choiceStr)
             console.log("can't draw")
             menu.disabled = false;
-            // menu.selectedIndex = null
+            if(onMobile){
+                playerAlert.appendChild(generateAlert("On Mobile"))
+                menu.selectedIndex = null
+            }
             return false;
         } 
         
@@ -352,7 +372,10 @@ export const canvasEvents = (canvasHome, context) => {
         // reset default of dropdown
             console.log("GO FALSE!")
             menu.disabled = false
-            // menu.selectedIndex = null
+            if(onMobile){
+                playerAlert.appendChild(generateAlert("On Mobile"))
+                menu.selectedIndex = null
+            }
             console.log("playerpoints", playerPoints)
 
 
@@ -452,7 +475,7 @@ export const canvasEvents = (canvasHome, context) => {
         const x = gridDecoderX[currentGrid[0]]
         const y = gridDecoderY[currentGrid[1]]
 
-        let str = `Current Selection: ${justBuilt.name} ; @ [${x}, ${y}].`
+        let str = `Current Selection: ${justBuilt.name} ; @ [${x},${y}].`
 
         return str
     }
