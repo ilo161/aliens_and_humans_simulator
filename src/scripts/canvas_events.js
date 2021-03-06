@@ -38,7 +38,7 @@ function buildPlayerState(){
         buildPlayerGrid[i] = {}
         for(let j = 0; j < 7; j++){
 
-            buildPlayerGrid[i][j] = {isPresent: false, cORp: "", klass: "", level: null}
+            buildPlayerGrid[i][j] = {isPresent: false, cORp: "", klass: "", level: null, name: ""}
         }
     }
     return buildPlayerGrid
@@ -106,12 +106,14 @@ export const canvasEvents = (canvasHome, context) => {
     const mainDropDown = Array.from(menu);
     // let menu = document.getElementsByClassName("nocat")[0]
     const playerAlert = document.getElementsByClassName("playerAlert")[0]
+    const playerAlert2 = document.getElementsByClassName("playerAlert2")[0]
     
     //When user clicks on grid it sets currentGrid. If they click outside, it returns
     // undefined
     canvasHome.addEventListener('mousedown', (e) => {
         currentGrid = getCoords(e);
-
+        debugger
+        // Menu is hidden . Therefore show the dropdown menu
         if(currentGrid && Array.from(menuContainer.classList).includes("hidden")){
             const x = currentGrid[0];
             const y = currentGrid[1];
@@ -121,154 +123,230 @@ export const canvasEvents = (canvasHome, context) => {
 
             const len = menu.options.length;
             menu.setAttribute('size', len);
+
             if(!isGridOccupied()){
+                removePlayerAlert(playerAlert)
                 previousGrid = currentGrid
                 console.log("previous grid", previousGrid)
                 //draw crosshair
                 drawOnGrid(cursor, context, x, y)
+            } else {
+                removePlayerAlert(playerAlert)
+                const currBuild = onPlayerGrid[x][y]
+                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
             }
 
         } else if(currentGrid && !Array.from(menuContainer.classList).includes("hidden")){
+            // Menu is not hidden, Game is Playable
+            // Draw cursor options below
             if(!isGridOccupied()){
+                removePlayerAlert(playerAlert)
+                removePlayerAlert(playerAlert2)
                 const x = currentGrid[0];
                 const y = currentGrid[1];
-                const prevX = previousGrid[0];
-                const prevY = previousGrid[1];
-                
+
+                if(previousGrid !== undefined){
+                    const prevX = previousGrid[0];
+                    const prevY = previousGrid[1];
+                    
+                    //remove crosshair cursor iff the previous grid wasn't built on.
+                    // if(!isGridOccupied(prevX, prevY)){
+                    if (onPlayerGrid[prevX][prevY].isPresent === false){
+                        drawOnGrid(grassSquare, context, prevX, prevY, true)
+                    }
+                }
 
                 //remove crosshair cursor iff the previous grid wasn't built on.
-                if(!isGridOccupied(prevX, prevY)){
-                    drawOnGrid(grassSquare, context, prevX, prevY, true)
-                }
+                // if(!isGridOccupied(prevX, prevY)){
+                //     drawOnGrid(grassSquare, context, prevX, prevY, true)
+                // }
                 // draw new crosshair
                 previousGrid = currentGrid
                 drawOnGrid(cursor, context, x, y)
                 console.log("CORRECT")
+            } else {
+                removePlayerAlert(playerAlert)
+                removePlayerAlert(playerAlert2)
+                const x = currentGrid[0];
+                const y = currentGrid[1];
+
+                if(previousGrid !== undefined){
+                    const prevX = previousGrid[0];
+                    const prevY = previousGrid[1];
+                
+                    //remove crosshair cursor iff the previous grid wasn't built on.
+                    // if(!isGridOccupied(prevX, prevY)){
+                    if(onPlayerGrid[prevX][prevY].isPresent === false){
+                        drawOnGrid(grassSquare, context, prevX, prevY, true)
+                    }
+                }
+                debugger
+                const currBuild = onPlayerGrid[x][y]
+                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
             }
         } else if (currentGrid === undefined && !Array.from(menuContainer.classList).includes("hidden")) {
-            const prevX = previousGrid[0];
-            const prevY = previousGrid[1];
+            removePlayerAlert(playerAlert)
+            removePlayerAlert(playerAlert2)
+            debugger
+            if(previousGrid !== undefined){
+                const prevX = previousGrid[0];
+                const prevY = previousGrid[1];
             
-            //remove crosshair cursor
-            drawOnGrid(grassSquare, context, prevX, prevY, true)
+                //remove crosshair cursor
+                if(onPlayerGrid[prevX][prevY].isPresent === false){
+                    drawOnGrid(grassSquare, context, prevX, prevY, true)
+                }
+            }
+            
             previousGrid = undefined;
+
             //hide dropdown if user clicks outside play grid            
             menuContainer.classList.toggle("hidden")
 
         } 
         console.log(`currentGrid: ${currentGrid}`)
+        console.log(`previousGrid: ${previousGrid}`)
     
     })
 
     // When user selects from the drop down menu to place a sprite
     menu.addEventListener('click', (e) => {
-        removePlayerAlert()
-        // debugger
+        // Remove error message if there is one
+        removePlayerAlert(playerAlert)
+        removePlayerAlert(playerAlert2)
+        
+        // show what sprite is currently there
+        if (previousGrid !== undefined){
+            if(previousGrid[0] === currentGrid[0] 
+                && previousGrid[1] === currentGrid[1]
+                && isGridOccupied()){
+
+            const currBuild = onPlayerGrid[currentGrid[0]][currentGrid[1]]
+            playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+
+            } 
+        }
+
+        if(playerAlert2.childElementCount === 0 && isGridOccupied()){
+                const currBuild = onPlayerGrid[currentGrid[0]][currentGrid[1]]
+                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+        }
+        
+
+        // player clicks on an option that isn't a play sprite
         if (allDropDownCategories.includes(e.target) ){
-            playerAlert.appendChild(generateErrorAlert("That is not a building"))
+            playerAlert.appendChild(generateAlert("That is not a building"))
             return false;
         }
 
         console.log("resources",playerPoints.resources)
-        // Remove error message if there is one
         
-
+        
+        // minimum purchase price required
         if (playerPoints.resources < 20){
-            playerAlert.appendChild(generateErrorAlert("Every building costs 20 resources ... !"))
-            // menu.selectedIndex = null; 
+            playerAlert.appendChild(generateAlert("Every building costs 20 resources ... !"))
             return false
         } 
         
         //choiceStr is "production,houses,0"
         const choiceStr = menu.options[menu.selectedIndex].value
 
+        // prevent incorrect choice on dropdown from being playable as a sprite
         if (!choiceStr.includes(",")){
-            playerAlert.appendChild(generateErrorAlert("That is not a building"))
+            playerAlert.appendChild(generateAlert("That is not a building"))
             return false;
         } 
-        // console.log(onPlayerGrid[currentGrid[0]][currentGrid[1]])
+
+
+        // handle all the error cases with verifyBuildingMatch FN
         const okToRender = verifyBuildingMatch(choiceStr, menu)
         if (!okToRender){
+            console.log("choiceStr", choiceStr)
             console.log("can't draw")
             menu.disabled = false;
             // menu.selectedIndex = null
             return false;
         } 
         
-        //chosenBuilding is \
-        //{isPresent: false, cORp: "", klass: "", level: null}
+        // chosenBuilding is syntax is....
+        // {isPresent: false, cORp: "", klass: "", level: null}
         const chosenBuilding = civilizationMenuSelect(choiceStr)
         const filePathBuild = chosenBuilding.file
         
-        
+        // If we made it this far, we know the option selected IS a valid building
+        // Image file has been parsed
 
         //place sprite if not occupied
         if(!isGridOccupied()){
-            
+
+            // Is the first building to be places
             if (isInitialBuilding(chosenBuilding) === true){
                 parseImage(context, filePathBuild, currentGrid)
-                occupyGrid(chosenBuilding)
+
+                
+                const currBuild = occupyGrid(chosenBuilding)
+
+                // if (playerAlert2.childElementCount === 0){
+                //     debugger
+                //     playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+                // } else {
+                //     //prepare playerAlert2 iff the cursor is at a new spot
+                //     removePlayerAlert(playerAlert2)
+                    playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+                // }
+
                 console.log("PAY UP")
                 adjustResources(-20)
 
                 playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
                 // debugger
                 adjustPoints(playerPoints[chosenBuilding.cORp], context, chosenBuilding.cORp)
-                // adjustPoints(playerPoints.community, context)
-                // adjustPoints(playerPoints.production, context, "production")
-                // menu.disabled = false
             } else {
-                playerAlert.appendChild(generateErrorAlert("That building is not the first of it's kind!"))
-                // menu.disabled = false
+                playerAlert.appendChild(generateAlert("That building is not the first of it's kind!"))
             }
         } else if (isGridOccupied()){
+            
              // Already a building on grid pos
              const x = currentGrid[0];
              const y = currentGrid[1];
 
              const objAtGridPos = onPlayerGrid[x][y];
-            //  const maxIndexOfType = civilization[chosenBuilding.cORp][chosenBuilding.klass].length - 1
-
-            //  // Player tries to add the same building to the occupied grid
-            //  if (chosenBuilding.klass === objAtGridPos.klass && chosenBuilding.index === objAtGridPos.level
-            //     && maxIndexOfType != chosenBuilding.index){
-
-            //     playerAlert.appendChild(generateErrorAlert("That building is already there. Try upgrading!"));
-
-            //  } else if (chosenBuilding.klass !== objAtGridPos.klass){
-            //     // Player tries to upgrade to a building of a different klass
-
-            //      playerAlert.appendChild(generateErrorAlert("Try upgrading that structure to a higher level!"));
-            //  } else if (chosenBuilding.klass === objAtGridPos.klass) {
-            //     // building klass is a match
+            
+             if (chosenBuilding.index === (objAtGridPos.level + 1)){
+                // player upgrades appropriately by 1 level
+                //re-render grass first && remove previous building
+                console.log("DRAW!!!")
+                drawOnGrid(grassSquare, context, x, y, true)
                 
-            //     // player has maxed out upgrade
-            //      if (maxIndexOfType === objAtGridPos.level){
-            //          playerAlert.appendChild(generateErrorAlert("Max upgrade achieved!"));
-                //  } 
-                //  else 
-                 if (chosenBuilding.index === (objAtGridPos.level + 1)){
-                     // player upgrades appropriately by 1 level
-                     //re-render grass first && remove previous building
-                     console.log("DRAW!!!")
-                     drawOnGrid(grassSquare, context, x, y, true)
-                     
-                     parseImage(context, filePathBuild, currentGrid)
-                     occupyGrid(chosenBuilding)
-                     console.log("PAY UP")
-                    adjustResources(-20)
-                     playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
-                    //  menu.disabled = false
-                 }
+                parseImage(context, filePathBuild, currentGrid)
+
+                //prepare playerAlert2 iff the cursor is at a new spot
+                const currBuild = occupyGrid(chosenBuilding)
+            
+                if (playerAlert2.childElementCount === 0){
+                 playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+                }  else {
+
+                removePlayerAlert(playerAlert2)
+                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+             }
+
+
+                //  occupyGrid(chosenBuilding)
+                console.log("PAY UP")
+                adjustResources(-20)
+                playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
+                //  menu.disabled = false
+            }
                 //   else if (chosenBuilding.index < objAtGridPos.level){
-                //      playerAlert.appendChild(generateErrorAlert("Try upgrading, we must not regret our past decisions"));
+                //      playerAlert.appendChild(generateAlert("Try upgrading, we must not regret our past decisions"));
                 //  }
                  
 
             //  }
             
 
-         }
+        }
 
 
         // reset default of dropdown
@@ -300,29 +378,33 @@ export const canvasEvents = (canvasHome, context) => {
             const objAtGridPos = onPlayerGrid[x][y]
             const maxIndexOfType = civilization[nextcORp][nextKlass].length - 1
 
-
-            
-
             if(objAtGridPos.cORp !== nextcORp || objAtGridPos.klass !== nextKlass){
-                playerAlert.appendChild(generateErrorAlert("Building types must match!"))
+                playerAlert.appendChild(generateAlert("Building types must match!"))
                 return false;
             } else if (nextKlass === objAtGridPos.klass && nextIndex === objAtGridPos.level
                 && maxIndexOfType != nextIndex){
-                // debugger
-                playerAlert.appendChild(generateErrorAlert("That building is already there. Try upgrading!"));
+
+                playerAlert.appendChild(generateAlert("That building is already there. Try upgrading!"));
                 return false
              } else if (nextKlass === objAtGridPos.klass) {
                 // building klass is a match
                 
                 // player has maxed out upgrade
                  if (maxIndexOfType === objAtGridPos.level){
-                     playerAlert.appendChild(generateErrorAlert("Max upgrade achieved!"));
-                     return false;
+                     // players attempts to downgrade a max upgrade unit
+                     if (nextIndex < maxIndexOfType){
+                         playerAlert.appendChild(generateAlert("Go forth & build! The aliens are coming!"));
+                         return false;
+                     } else {
+                         // players pick max upgrade again
+                         playerAlert.appendChild(generateAlert("Max upgrade achieved!"));
+                         return false;
+                     }
                  } else if (nextIndex < objAtGridPos.level){
-                     playerAlert.appendChild(generateErrorAlert("Try upgrading, we must not regret our past decisions"));
+                     playerAlert.appendChild(generateAlert("Try upgrading, we must not regret our past decisions"));
                      return false;
                  } else if((objAtGridPos.level + 1) !== nextIndex){
-                     playerAlert.appendChild(generateErrorAlert("Upgrade one level at a time!"));
+                     playerAlert.appendChild(generateAlert("Upgrade one level at a time!"));
                      return false;
                 } 
             }
@@ -332,20 +414,77 @@ export const canvasEvents = (canvasHome, context) => {
     }
 
     //Alert System
-    const removePlayerAlert = () => {
-         if (playerAlert.childElementCount > 0){
-            playerAlert.removeChild(playerAlert.childNodes[0]); 
+    const removePlayerAlert = (alertType) => {
+        const thisMany = alertType.childElementCount
+
+        if (thisMany > 0){
+            // if (thisMany > 1){
+            //     for(let i = 0; i < thisMany; i++){
+            //         alertType.removeChild(alertType.childNodes[0]); 
+            //     }
+            // } else 
+            alertType.removeChild(alertType.childNodes[0]); 
         }
+        
+        
+         
     }
 
-    const generateErrorAlert = (errorMsg) => {
-        // Add Error message to the DOM -> "That building is already there. Try upgrading!"
-        const ele = document.createElement('p');
+    // x is a row and goes top -> down
+    const gridDecoderX = {
+        0: "A",
+        1: "B",
+        2: "C",
+        3: "D"
+    }
 
-        const text = document.createTextNode(errorMsg); 
-        ele.appendChild(text)
-        ele.setAttribute('class', 'playerAlert');
-        return ele
+    const gridDecoderY = {
+        0: "1",
+        1: "2",
+        2: "3",
+        3: "4",
+        4: "5",
+        5: "6",
+        6: "7",
+    }
+
+    const generateCurrSelText = (justBuilt) => {
+        const x = gridDecoderX[currentGrid[0]]
+        const y = gridDecoderY[currentGrid[1]]
+
+        let str = `Current Selection: ${justBuilt.name} ; @ [${x}, ${y}].`
+
+        return str
+    }
+
+    const generateAlert = (msg, isErrorMsg = true) => {
+        // Add Error message to the DOM -> "That building is already there. Try upgrading!"
+        const ele = document.createElement('span');
+        
+
+        
+        if(isErrorMsg){
+            const text = document.createTextNode(msg); 
+            ele.appendChild(text);
+
+            ele.setAttribute('class', 'playerAlert');
+            return ele
+        } else {
+            const $span = document.createElement('p');
+            const parts = msg.split(";");
+
+            const text = document.createTextNode(parts[0]);
+            const posText = document.createTextNode(parts[1]);
+            ele.appendChild(text)
+            $span.appendChild(posText)
+            ele.setAttribute('class', 'playerAlert2');
+            $span.setAttribute('class', 'red');
+
+            ele.appendChild($span)
+            return ele
+        }
+
+        
     }
 
     // menuContainer.classList.toggle("shrink")
@@ -501,9 +640,13 @@ const occupyGrid = (chosenBuilding) => {
     onPlayerGrid[x][y].cORp = chosenBuilding.cORp
     onPlayerGrid[x][y].klass = chosenBuilding.klass
     onPlayerGrid[x][y].level = chosenBuilding.index
+    onPlayerGrid[x][y].name = chosenBuilding.name
+
 
     return onPlayerGrid[x][y]
 }
+
+
 
 const isInitialBuilding = (chosenBuilding) => {
     if (chosenBuilding.index === 0) return true;
@@ -556,7 +699,6 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
             //works and original func
             // context.drawImage(image, offsetX, offsetY, image.width /11.9, image.height / 11.9 )
             if (clearRectBoolean){
-                debugger
                 context.clearRect(offsetX, offsetY, 86, 86)
                 context.drawImage(image, offsetX, offsetY, 86, 86)
             } else {

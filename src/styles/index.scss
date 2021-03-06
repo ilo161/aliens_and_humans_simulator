@@ -137,6 +137,22 @@ select{
 
 }
 
+.playerAlert2{
+    position: absolute;
+    overflow-wrap: break-word;
+    width: 130px;
+    top: 22%;
+    left: 9%;
+    color: rgba(158, 253, 255);
+    font-size: 25;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bolder;
+}
+
+.red{
+    color: rgb(246,82,90);
+}
+
 .flex-row-start{
     display: flex;
     justify-content: center; 

@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () =>  {
         drawAlienCountdown(context);
         if(getTime() === 0){
             // context.clearRect(44,389,86,86)
-            animateSquares(cursor, context)
+            // animateSquares(cursor, context)
             clearAlienText(context)
             clearInterval(makeCountdownId)
             summonAliens(context)
