@@ -344,12 +344,12 @@ export const canvasEvents = (canvasHome, context) => {
                 const currBuild = occupyGrid(chosenBuilding)
             
                 if (playerAlert2.childElementCount === 0){
-                 playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
-                }  else {
+                   playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+                } else {
 
-                removePlayerAlert(playerAlert2)
-                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
-             }
+                  removePlayerAlert(playerAlert2)
+                  playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+                }
 
 
                 //  occupyGrid(chosenBuilding)
@@ -387,7 +387,6 @@ export const canvasEvents = (canvasHome, context) => {
         const x = currentGrid[0]
         const y = currentGrid[1]
         menu.disabled = true
-        // debugger
 
         if(onPlayerGrid[x][y].isPresent === true){
 
