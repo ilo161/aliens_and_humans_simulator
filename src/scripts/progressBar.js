@@ -29,7 +29,7 @@ import vGreen90 from "../images/v_progress_bars/V_GreenBar90.png"
 import vGreen100 from "../images/v_progress_bars/V_GreenBar100.png"
 
 
-import vGreen from "../images/v_progress_bars/V_GreenBar100.png"
+
 // import vRed from "../images/v_progress_bars/V_RedBar.png"
 // import vYellow from "../images/v_progress_bars/V_YellowBar.png"
 import {buildAssetPath} from "./util.js"

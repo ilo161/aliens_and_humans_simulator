@@ -18,6 +18,7 @@ import "./styles/index.scss";
 
 import {
     drawResourcesText,
+    drawPointsText,
     drawAlienCountdown,
     clearAlienText,
     adjustTimer,
@@ -25,6 +26,11 @@ import {
     setTimer,
     drawMidline,
     spawnResources} from "./scripts/pointsSystem";
+
+import Leviathan from "./scripts/leviathan";
+import leviathanSheet from "./images/aliens/leviathan_strip.png";
+const leviathanSprite = buildAssetPath(leviathanSheet);
+
 
 // This is the cursor icon, preloaded with source path
 // const cursor = new Image()
@@ -38,6 +44,24 @@ document.addEventListener("DOMContentLoaded", () =>  {
 
     canvasEvents(canvasHome, context)
     drawGrass(context)
+
+    // leviathan(context, filePath, cx, cy, scaleW, scaleH){
+    const leviathanArr = [];
+    let leviCx = 100;
+    let leviCy = 0;
+    let leviCount = 0;
+
+    for(let i = 0; i < 9; i++){
+        const levi = new Leviathan(context, leviathanSprite, leviCx, leviCy, 131, 131);
+        leviathanArr.push(levi);
+        leviCx += 167;
+    
+        leviCount++;
+        if(leviCx > 434) leviCx = 100;
+        if(leviCount % 3 === 0) leviCy += 167;
+
+    }
+    
     //draw Production progress bar
     // y is 375
     // old
@@ -52,7 +76,10 @@ document.addEventListener("DOMContentLoaded", () =>  {
     // debugger
     drawMidline(context)
     drawLetterNum(context)
+    drawPointsText(context, "community")
+    drawPointsText(context, "production")
     
+    //stick this into a "Start game button"
     const makeCountdownId = setInterval(() => {
         adjustTimer(-1);
         drawAlienCountdown(context);
@@ -62,12 +89,19 @@ document.addEventListener("DOMContentLoaded", () =>  {
             clearAlienText(context)
             clearInterval(makeCountdownId)
             summonAliens(context)
+
+            setTimeout(() =>{
+                // animateLeviathans(levi1, levi2, levi3)
+
+                animateLeviathans(...leviathanArr)
+
+            },2500)
         }
     },1000)
 
     const makeResourcesId = setInterval(() => {
         spawnResources();
-        drawResourcesText(context);
+        // drawResourcesText(context);
     }, 600)
 
     setInterval(() => {
@@ -101,16 +135,6 @@ document.addEventListener("DOMContentLoaded", () =>  {
     // productionBar.increaseFill()
     // progressBar(context, 626, 476, "blue")
 
-    
-    
-
-    
-    // let choice = menu.options[menu.selectedIndex].value
-
-    // let imgTest = new Image();
-    
-    // imgTest.src = "/src/images/terrain_grass/grass_mix_n.jpg"
-
     // imgTest.onload = () => {
 
         // for(let i = 0; i < 7; i++){
@@ -129,19 +153,26 @@ document.addEventListener("DOMContentLoaded", () =>  {
 
 })
 
-    // let imgTest = new Image();
-    
-    // imgTest.src = "/src/images/terrain_grass/grass_mix_n.jpg"
+const animateLeviathans = (...levis) => {
+    let num = 1
 
-    // imgTest.onload = () => {
+    const leviatathanID = setInterval( () => {
+      let isStatic = levis.some(levi => levi.drawSpin(leviatathanID))
+      
+      console.log(`${++num}, ${isStatic}`)
+      if(isStatic) clearInterval(leviatathanID)
 
-    //     drawOnGrid(imgTest, 0, 5)
-    //     // drawOnGrid(imgTest, 6)
-    // }
-//  backgrounds()
+    },50)
+}
+
+   
+// const leviatathanID = setInterval( () => {
+//       let isStatic = levis.some(levi => {
+//           console.log(levi.drawSpin(), "indexjs")
+//       })
+//       console.log(`${++num}, ${isStatic}`)
+//       if(isStatic) clearInterval(leviatathanID)
+
+//     },50)
 
 
-
-
-
-// const backgrounds = require("./scripts/backgrounds.js")

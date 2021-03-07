@@ -3,6 +3,7 @@ import MotherShip from "./mothership";
 import {buildAssetPath} from "./util"
 import {
     playerPoints,
+    drawPointsText,
     adjustPoints,
     adjustResources,
     adjustTimer
@@ -319,6 +320,7 @@ export const canvasEvents = (canvasHome, context) => {
                 adjustResources(-20)
 
                 playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
+                drawPointsText(context, chosenBuilding.cORp)
                 // debugger
                 adjustPoints(playerPoints[chosenBuilding.cORp], context, chosenBuilding.cORp)
             } else {
@@ -356,6 +358,7 @@ export const canvasEvents = (canvasHome, context) => {
                 console.log("PAY UP")
                 adjustResources(-20)
                 playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
+                drawPointsText(context, chosenBuilding.cORp)
                 //  menu.disabled = false
             }
                 //   else if (chosenBuilding.index < objAtGridPos.level){
@@ -430,7 +433,7 @@ export const canvasEvents = (canvasHome, context) => {
                      return false;
                 } 
             }
-            // else if ()
+
         }
         return true
     }
@@ -480,7 +483,7 @@ export const canvasEvents = (canvasHome, context) => {
     }
 
     const generateAlert = (msg, isErrorMsg = true) => {
-        // Add Error message to the DOM -> "That building is already there. Try upgrading!"
+        // Add message to the DOM -> "That building is already there. Try upgrading!"
         const ele = document.createElement('span');
         
 
@@ -492,17 +495,17 @@ export const canvasEvents = (canvasHome, context) => {
             ele.setAttribute('class', 'playerAlert');
             return ele
         } else {
-            const $span = document.createElement('p');
+            const $p = document.createElement('p');
             const parts = msg.split(";");
 
             const text = document.createTextNode(parts[0]);
             const posText = document.createTextNode(parts[1]);
             ele.appendChild(text)
-            $span.appendChild(posText)
+            $p.appendChild(posText)
             ele.setAttribute('class', 'playerAlert2');
-            $span.setAttribute('class', 'red');
+            $p.setAttribute('class', 'red');
 
-            ele.appendChild($span)
+            ele.appendChild($p)
             return ele
         }
 

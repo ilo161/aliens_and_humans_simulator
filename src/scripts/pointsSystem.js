@@ -4,7 +4,7 @@ import progressBar from "./progressBar.js"
 export const playerPoints = {
     community: 0,
     production: 0,
-    resources: 0,
+    resources: 1000,
     alienTimer: 2
 }
 
@@ -37,7 +37,7 @@ export const adjustPoints = (points, context, style = "community") => {
         case (points > 394 && points <= 436):
             fillPercentage = 80;
             break;
-        case (points > 436 && points <= 478):
+        case (points > 436 && points <= 700):
             fillPercentage = 90;
             break;
         case (points > 700):
@@ -121,7 +121,7 @@ export const drawResourcesText = (context) => {
     const startX = ((context.canvas.width / 2) - 108);
     const startY = 522;
     // context.clearRect(startX, 478, (startX + 350), 30)
-    context.clearRect(startX, 500, (startX + 350), 30)
+    context.clearRect(startX, 500, 260, 30)
 
     context.font = 'bold 30px Sans-Serif';
     context.fillStyle = "#000"
@@ -131,5 +131,41 @@ export const drawResourcesText = (context) => {
     context.fillText("Resources: " + playerPoints.resources, startX, startY);
     context.strokeText("Resources: " + playerPoints.resources, startX, startY);
     // requestAnimationFrame(drawResourcesText(context))
+
+  }
+
+  export const drawPointsText = (context, cORp) => {
+      
+    if (cORp === "community"){
+        const startX = 5;
+        const startY = 522;
+        const clearStartHeight = startY - 20;
+        const clearHeight = context.canvas.height - clearStartHeight;
+        context.clearRect(0, clearStartHeight, 225, clearHeight);
+        context.font = 'bold 20px Sans-Serif';
+        context.fillStyle = "#9efdff"
+        context.strokeStyle = "#FFF";
+        // context.fillText(playerPoints.community + " community", startX, startY);
+        context.fillText("community: " + playerPoints.community, startX, startY);
+        // context.strokeText(playerPoints.community + " community points", startX, startY);
+    } else if(cORp === "production"){
+        //Txt coords
+        const startXTxt = context.canvas.width - 165
+        const startYTxt = 522;
+        // num coords
+        const startXPts = context.canvas.width - 55
+        const startYPts = startYTxt - 18;
+        // const clearStartHeight = startYTxt - 20;
+        const clearStartHeight = startYTxt - 33;
+        const clearHeight = context.canvas.height - clearStartHeight;
+        context.clearRect(startXTxt, clearStartHeight, startXTxt, clearHeight);
+        context.font = 'bold 20px Sans-Serif';
+        context.fillStyle = "#FFF"
+        context.strokeStyle = "#000";
+        // context.fillText(playerPoints.production + " production pts", startXTxt, startYTxt);
+        // context.fillText(playerPoints.production, startXPts, startYPts);
+        context.strokeText("production: " + playerPoints.production, startXTxt, startYTxt);
+        context.fillText("production: " + playerPoints.production, startXTxt, startYTxt);
+    } 
 
   }
