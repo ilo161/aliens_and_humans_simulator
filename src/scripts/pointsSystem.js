@@ -5,7 +5,7 @@ export const playerPoints = {
     community: 0,
     production: 0,
     resources: 500,
-    alienTimer: 30
+    alienTimer: 120
 }
 
 // cORp stands for community or production
