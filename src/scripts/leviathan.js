@@ -37,8 +37,10 @@ class Leviathan {
         this.sprite.src = this.filePath;
     }
 
-    drawSpin(id){
+    drawSpin(id, okToClearCanvas){
+
         if(this.okToSpin){
+            
             this.context.clearRect(this.cx, this.cy, this.scaleW, this.scaleH);
             this.context.drawImage(this.sprite, 
                 this.movements[this.index].sx, this.movements[this.index].sy,
@@ -50,12 +52,24 @@ class Leviathan {
 
             if(this.spinCount === 8) {
                 this.okToSpin = false;
+                clearInterval(id)
+                return true
+                // new Promise solution
+
                 // return this.drawFacing().then((res) =>{
                 //     console.log("SUCCESSFUL PROMISE", res)
                 //     return true
                 // });
+                // debugger
+                // if(okToClearCanvas){
+                //     debugger
+                //     console.log("ALL BLACK", okToClearCanvas)
+                //     this.context.fillStyle = "#000";
+                //     this.context.fillRect(0, 0, this.cWidth, this.cHeight);
+                // }
+                
 
-                this.drawFacing(id)
+                // this.drawFacing(id)
             }
             if(this.index >= this.movements.length) {
                 this.index = 0;
@@ -64,9 +78,11 @@ class Leviathan {
         }
     }
 
+
+
     drawFacing(id){
         // this.context.clearRect(0, 0, this.cWidth, this.cHeight);
-        this.context.clearRect(this.cx, this.cy, this.scaleW, this.scaleH);
+        // this.context.clearRect(this.cx, this.cy, this.scaleW, this.scaleH);
         this.context.drawImage(this.sprite, 
                 this.movements[0].sx, this.movements[0].sy,
                 this.movements[0].px, this.movements[0].py,
@@ -74,6 +90,7 @@ class Leviathan {
                 this.properties.width, this.properties.height
                 )
 
+                //with new Promise Solution
         // const promise = new Promise(function(resolve, reject) {
         //     setTimeout(() => {
         //     resolve(true);
@@ -81,11 +98,7 @@ class Leviathan {
         // });
         // return promise;  
         
-        clearInterval(id)
-
-    }
-
-    drawLightning(){
+        // clearInterval(id)
 
     }
 

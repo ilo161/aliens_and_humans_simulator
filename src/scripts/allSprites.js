@@ -53,6 +53,7 @@ export const allSprites = {
     "meditate0": meditate0,
     "meditate1": meditate1,
     "meditate2": meditate2,
+    "---pyramid":"pyramids",
     "pyramid0": pyramid0,
     "pyramid1": pyramid1,
     "pyramid2": pyramid2,

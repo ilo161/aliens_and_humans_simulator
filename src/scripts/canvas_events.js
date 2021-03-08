@@ -13,7 +13,8 @@ import {allSprites} from "./allSprites"
 
 import grassD from "../images/terrain_grass/grass_mix_d.jpg"
 import cursorPng from "../images/cursor.png"
-// import grassD from "../images/terrain_grass/midgrass.jpg"
+
+
 
 // //ex: [3,4]
 let currentGrid = undefined;
@@ -27,6 +28,8 @@ grassSquare.src = buildAssetPath(grassD)
 // This is the cursor icon, preloaded with source path
 export const cursor = new Image()
 cursor.src = buildAssetPath(cursorPng)
+
+
 
 // skeleton for onPlayerGrid
 //{isPresent: false, cORp: "", klass: "", level: null}
@@ -126,9 +129,14 @@ export const canvasEvents = (canvasHome, context) => {
     
     //When user clicks on grid it sets currentGrid. If they click outside, it returns
     // undefined
+    canvasHome.addEventListener('mouseover', showDeets)
+    // canvasHome.addEventListener('mousedown',(e) => handleMouseDown(e, canvasHome, context, 
+    //     menuContainer, playerAlert, playerAlert2))
+
     canvasHome.addEventListener('mousedown', (e) => {
+
         currentGrid = getCoords(e);
-        debugger
+
         // Menu is hidden . Therefore show the dropdown menu
         if(currentGrid && Array.from(menuContainer.classList).includes("hidden")){
             const x = currentGrid[0];
@@ -137,8 +145,8 @@ export const canvasEvents = (canvasHome, context) => {
             //show dropdown if user clicks in playgrid
             menuContainer.classList.toggle("hidden")
 
-            const len = menu.options.length;
-            menu.setAttribute('size', len);
+            // const len = menu.options.length;
+            // menu.setAttribute('size', len);
 
             if(!isGridOccupied()){
                 removePlayerAlert(playerAlert)
@@ -166,16 +174,12 @@ export const canvasEvents = (canvasHome, context) => {
                     const prevY = previousGrid[1];
                     
                     //remove crosshair cursor iff the previous grid wasn't built on.
-                    // if(!isGridOccupied(prevX, prevY)){
                     if (onPlayerGrid[prevX][prevY].isPresent === false){
                         drawOnGrid(grassSquare, context, prevX, prevY, true)
                     }
                 }
 
                 //remove crosshair cursor iff the previous grid wasn't built on.
-                // if(!isGridOccupied(prevX, prevY)){
-                //     drawOnGrid(grassSquare, context, prevX, prevY, true)
-                // }
                 // draw new crosshair
                 previousGrid = currentGrid
                 drawOnGrid(cursor, context, x, y)
@@ -196,14 +200,13 @@ export const canvasEvents = (canvasHome, context) => {
                         drawOnGrid(grassSquare, context, prevX, prevY, true)
                     }
                 }
-                debugger
                 const currBuild = onPlayerGrid[x][y]
                 playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
             }
         } else if (currentGrid === undefined && !Array.from(menuContainer.classList).includes("hidden")) {
             removePlayerAlert(playerAlert)
             removePlayerAlert(playerAlert2)
-            debugger
+
             if(previousGrid !== undefined){
                 const prevX = previousGrid[0];
                 const prevY = previousGrid[1];
@@ -224,6 +227,8 @@ export const canvasEvents = (canvasHome, context) => {
         console.log(`previousGrid: ${previousGrid}`)
     
     })
+
+
     if ( /Android|webOS|iPhone|iPod|Blackberry|Windows Phone/i.test(navigator.userAgent)){
        onMobile = true;
     }
@@ -303,25 +308,17 @@ export const canvasEvents = (canvasHome, context) => {
             // Is the first building to be places
             if (isInitialBuilding(chosenBuilding) === true){
                 parseImage(context, filePathBuild, currentGrid)
-
                 
                 const currBuild = occupyGrid(chosenBuilding)
 
-                // if (playerAlert2.childElementCount === 0){
-                //     debugger
-                //     playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
-                // } else {
-                //     //prepare playerAlert2 iff the cursor is at a new spot
-                //     removePlayerAlert(playerAlert2)
-                    playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
-                // }
+                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+                
 
                 console.log("PAY UP")
                 adjustResources(-20)
 
                 playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
                 drawPointsText(context, chosenBuilding.cORp)
-                // debugger
                 adjustPoints(playerPoints[chosenBuilding.cORp], context, chosenBuilding.cORp)
             } else {
                 playerAlert.appendChild(generateAlert("That building is not the first of it's kind!"))
@@ -361,13 +358,7 @@ export const canvasEvents = (canvasHome, context) => {
                 drawPointsText(context, chosenBuilding.cORp)
                 //  menu.disabled = false
             }
-                //   else if (chosenBuilding.index < objAtGridPos.level){
-                //      playerAlert.appendChild(generateAlert("Try upgrading, we must not regret our past decisions"));
-                //  }
-                 
 
-            //  }
-            
 
         }
 
@@ -438,16 +429,11 @@ export const canvasEvents = (canvasHome, context) => {
         return true
     }
 
-    //Alert System
+    // Alert System
     const removePlayerAlert = (alertType) => {
         const thisMany = alertType.childElementCount
 
         if (thisMany > 0){
-            // if (thisMany > 1){
-            //     for(let i = 0; i < thisMany; i++){
-            //         alertType.removeChild(alertType.childNodes[0]); 
-            //     }
-            // } else 
             alertType.removeChild(alertType.childNodes[0]); 
         }
         
@@ -565,16 +551,156 @@ export const canvasEvents = (canvasHome, context) => {
             
     }
 
-    function seeGridOptions(row, col){
-        console.log(gameOptions[row][col])
-    }
-
-    function gridClick(row, col){
-
-
-    }
 
 }
+// e, canvasHome, context, 
+//         menuContainer, playerAlert, playerAlert2))
+
+// export const handleMouseDown = (e, canvasHome, context, menuContainer, playerAlert, playerAlert2) => {
+//     currentGrid = getCoords(e, canvasHome);
+
+//         // Menu is hidden . Therefore show the dropdown menu
+//         if(currentGrid && Array.from(menuContainer.classList).includes("hidden")){
+//             const x = currentGrid[0];
+//             const y = currentGrid[1];
+
+//             //show dropdown if user clicks in playgrid
+//             menuContainer.classList.toggle("hidden")
+//             debugger
+
+//             // const len = menu.options.length;
+//             // menu.setAttribute('size', len);
+
+//             if(!isGridOccupied()){
+//                 removePlayerAlert(playerAlert)
+//                 previousGrid = currentGrid
+//                 console.log("previous grid", previousGrid)
+//                 //draw crosshair
+//                 drawOnGrid(cursor, context, x, y)
+//             } else {
+//                 removePlayerAlert(playerAlert)
+//                 const currBuild = onPlayerGrid[x][y]
+//                 playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+//             }
+
+//         } else if(currentGrid && !Array.from(menuContainer.classList).includes("hidden")){
+//             // Menu is not hidden, Game is Playable
+//             // Draw cursor options below
+//             if(!isGridOccupied()){
+//                 removePlayerAlert(playerAlert)
+//                 removePlayerAlert(playerAlert2)
+//                 const x = currentGrid[0];
+//                 const y = currentGrid[1];
+
+//                 if(previousGrid !== undefined){
+//                     const prevX = previousGrid[0];
+//                     const prevY = previousGrid[1];
+                    
+//                     //remove crosshair cursor iff the previous grid wasn't built on.
+//                     // if(!isGridOccupied(prevX, prevY)){
+//                     if (onPlayerGrid[prevX][prevY].isPresent === false){
+//                         drawOnGrid(grassSquare, context, prevX, prevY, true)
+//                     }
+//                 }
+
+//                 //remove crosshair cursor iff the previous grid wasn't built on.
+//                 // draw new crosshair
+//                 previousGrid = currentGrid
+//                 drawOnGrid(cursor, context, x, y)
+//                 console.log("CORRECT")
+//             } else {
+//                 removePlayerAlert(playerAlert)
+//                 removePlayerAlert(playerAlert2)
+//                 const x = currentGrid[0];
+//                 const y = currentGrid[1];
+
+//                 if(previousGrid !== undefined){
+//                     const prevX = previousGrid[0];
+//                     const prevY = previousGrid[1];
+                
+//                     //remove crosshair cursor iff the previous grid wasn't built on.
+//                     // if(!isGridOccupied(prevX, prevY)){
+//                     if(onPlayerGrid[prevX][prevY].isPresent === false){
+//                         drawOnGrid(grassSquare, context, prevX, prevY, true)
+//                     }
+//                 }
+//                 debugger
+//                 const currBuild = onPlayerGrid[x][y]
+//                 playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+//             }
+//         } else if (currentGrid === undefined && !Array.from(menuContainer.classList).includes("hidden")) {
+//             removePlayerAlert(playerAlert)
+//             removePlayerAlert(playerAlert2)
+
+//             if(previousGrid !== undefined){
+//                 const prevX = previousGrid[0];
+//                 const prevY = previousGrid[1];
+            
+//                 //remove crosshair cursor
+//                 if(onPlayerGrid[prevX][prevY].isPresent === false){
+//                     drawOnGrid(grassSquare, context, prevX, prevY, true)
+//                 }
+//             }
+            
+//             previousGrid = undefined;
+
+//             //hide dropdown if user clicks outside play grid            
+//             menuContainer.classList.toggle("hidden")
+
+//         } 
+//         console.log(`currentGrid: ${currentGrid}`)
+//         console.log(`previousGrid: ${previousGrid}`)
+// }
+
+// const getCoords = (e, canvasHome) => {
+//         let canvasRect = canvasHome.getBoundingClientRect();
+//         let cx;
+//         let cy;
+//         let px = e.pageX;
+//         let py = e.pageY;
+
+//         console.log("-------")
+//         console.log("px", px)
+//         console.log("py", py)
+
+//         cx = px - canvasRect.left
+//         cy = py - canvasRect.top
+//         console.log(canvasRect)
+
+//         console.log("-------")
+//         console.log("cx", cx)
+//         console.log("cy",cy)
+//         // const col = Math.floor((cx - 22) / 86) ;
+//         // const row = Math.floor((cy - 131) / 86) ;
+
+//         const col = Math.floor((cx - 49) / 86) ;
+//         const row = Math.floor((cy - 138) / 86) ;
+
+//         // current location console.log
+//         console.log(`X: [${row}, Y: ${col}]`)
+
+//         //did click on game grid
+//         if (row >= 0 && row <= 3 && col >= 0 && col <= 6){
+//             return [row,col]
+//         }
+//         //did NOT click on game grid
+//         else {
+//             return undefined
+//         }
+            
+// }
+
+// const removePlayerAlert = (alertType) => {
+//         const thisMany = alertType.childElementCount
+
+//         if (thisMany > 0){
+//             alertType.removeChild(alertType.childNodes[0]); 
+//         }
+        
+        
+         
+//     }
+
 // selected argument is "production,houses,0"
 const civilizationMenuSelect = (selected) => {
         let optionsArr = selected.split(",")
@@ -597,10 +723,6 @@ export const drawGrass = (context) => {
 
         img1.onload = () => {
 
-            // drawRow(context, img1, 22, 131)
-            // drawRow(context, img1, 22, 217)
-            // drawRow(context, img1, 22, 303)
-            // drawRow(context, img1, 22, 389)
             drawRow(context, img1, 44, 131)
             drawRow(context, img1, 44, 217)
             drawRow(context, img1, 44, 303)
@@ -611,10 +733,7 @@ export const drawGrass = (context) => {
 
     const drawRow = (context, image, rowX, rowY) => {
         for(let i = 0; i < 7; i++){
-
-            // context.drawImage(image, rowX, rowY, image.width /11.9, image.height / 11.9 )
             context.drawImage(image, rowX, rowY, 86, 86 )
-            // 
             rowX += 86
         }
     }
@@ -631,7 +750,6 @@ export const drawLetterNum = (context) => {
     const startNumY = 489;
 
     context.font = 'bold 13px Sans-Serif';
-    // context.fillStyle = "#000"
     context.fillStyle = "#FFF"
     context.strokeStyle = "#FFF";
     for(let i = 0; i < alpha.length; i++){
@@ -646,13 +764,10 @@ export const drawLetterNum = (context) => {
 
         
     }
-    // context.strokeText(alpha[0], startX, 164);
+
 }
 
 const isGridOccupied = (x = currentGrid[0], y = currentGrid[1]) => {
-    // const x = currentGrid[0]
-    // const y = currentGrid[1]
-
     return onPlayerGrid[x][y].isPresent
 }
 
@@ -773,6 +888,10 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
 
     }
 
+    export const drawLightning = (image, context) => {
+        context.drawImage(image, 0, 0, context.canvas.width, context.canvas.height)
+    }
+
     // export const loadAlienShip = () => {
     //     // const alienSrc = "/src/images/aliens/ships/08-Netuno.png";
     //     // const alienShip = new Image();
@@ -784,7 +903,9 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
 
     // }
 
-
+export const showDeets = () => {
+    console.log("THE DEETS")
+}
 
 // export default canvasEvents;
 

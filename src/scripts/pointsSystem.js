@@ -4,8 +4,8 @@ import progressBar from "./progressBar.js"
 export const playerPoints = {
     community: 0,
     production: 0,
-    resources: 1000,
-    alienTimer: 2
+    resources: 500,
+    alienTimer: 140
 }
 
 // cORp stands for community or production
@@ -79,6 +79,11 @@ export const setTimer = (num) => {
 
 export const getTime = () => {
     return playerPoints.alienTimer;
+}
+
+export const getPoints = (cORp) => {
+    if(cORp === "community") return playerPoints.community
+    else return playerPoints.production
 }
 
 export const clearAlienText = (context) => {

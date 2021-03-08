@@ -4,12 +4,12 @@ import {animateSquares,
         drawLetterNum,
         drawOnGrid,
         summonAliens,
-        grassSquare,
-        cursor
-        } from "./scripts/canvas_events.js"
+        drawLightning,
+        showDeets
+        } from "./scripts/canvas_events.js";
 
-import progressBar from "./scripts/progressBar.js"
-import {buildAssetPath} from "./scripts/util"
+import progressBar from "./scripts/progressBar.js";
+import {buildAssetPath, animateLeviathans} from "./scripts/util";
 import "./styles/index.scss";
 
 
@@ -25,11 +25,21 @@ import {
     getTime,
     setTimer,
     drawMidline,
-    spawnResources} from "./scripts/pointsSystem";
+    spawnResources,
+    getPoints} from "./scripts/pointsSystem";
 
 import Leviathan from "./scripts/leviathan";
 import leviathanSheet from "./images/aliens/leviathan_strip.png";
+import fullLightningPng from "./images/background/full_lightning.png"
+import chickenPng from "./images/animals/chicken.png"
+
 const leviathanSprite = buildAssetPath(leviathanSheet);
+const fullLightning = new Image();
+const chicken = new Image();
+fullLightning.src = buildAssetPath(fullLightningPng)
+chicken.src = buildAssetPath(chickenPng)
+
+
 
 
 // This is the cursor icon, preloaded with source path
@@ -41,6 +51,10 @@ document.addEventListener("DOMContentLoaded", () =>  {
 
     const canvasHome = document.getElementById("canvas-home");
     const context = canvasHome.getContext('2d')
+    const youWin = document.getElementsByClassName("youwin")[0]
+    const youLose = document.getElementsByClassName("youlose")[0]
+
+    
 
     canvasEvents(canvasHome, context)
     drawGrass(context)
@@ -78,6 +92,17 @@ document.addEventListener("DOMContentLoaded", () =>  {
     drawLetterNum(context)
     drawPointsText(context, "community")
     drawPointsText(context, "production")
+
+    // draw the players $$ on bottom middle of canvas
+    const drawResourcesTextId = setInterval(() => {
+        drawResourcesText(context);
+    }, 600)
+
+    // spawn random resources
+    const makeResourcesId = setInterval(() => {
+        spawnResources();
+        // drawResourcesText(context);
+    }, 600)
     
     //stick this into a "Start game button"
     const makeCountdownId = setInterval(() => {
@@ -88,25 +113,27 @@ document.addEventListener("DOMContentLoaded", () =>  {
             // animateSquares(cursor, context)
             clearAlienText(context)
             clearInterval(makeCountdownId)
+            clearInterval(drawResourcesTextId)
+            canvasHome.removeEventListener("mouseover", showDeets)
+
             summonAliens(context)
 
             setTimeout(() =>{
-                // animateLeviathans(levi1, levi2, levi3)
-
-                animateLeviathans(...leviathanArr)
-
+                if(getPoints("community") < getPoints()){
+                    animateSquares(chicken,context)
+                    setTimeout(() => {
+                        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+                        animateLeviathans(context, ...leviathanArr)
+                        setTimeout( () => drawLightning(fullLightning, context), 3000)
+                    },2000)
+                }
             },2500)
         }
     },1000)
 
-    const makeResourcesId = setInterval(() => {
-        spawnResources();
-        // drawResourcesText(context);
-    }, 600)
+    
 
-    setInterval(() => {
-        drawResourcesText(context);
-    }, 250)
+    
     // spawnResources();
     // drawResourcesText(context);
 
@@ -153,17 +180,9 @@ document.addEventListener("DOMContentLoaded", () =>  {
 
 })
 
-const animateLeviathans = (...levis) => {
-    let num = 1
 
-    const leviatathanID = setInterval( () => {
-      let isStatic = levis.some(levi => levi.drawSpin(leviatathanID))
-      
-      console.log(`${++num}, ${isStatic}`)
-      if(isStatic) clearInterval(leviatathanID)
 
-    },50)
-}
+
 
    
 // const leviatathanID = setInterval( () => {
