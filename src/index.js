@@ -2,19 +2,14 @@ import {animateSquares,
         canvasEvents,
         drawGrass,
         drawLetterNum,
-        drawOnGrid,
         summonAliens,
         drawLightning,
-        showDeets
+        _listener
         } from "./scripts/canvas_events.js";
 
 import progressBar from "./scripts/progressBar.js";
 import {buildAssetPath, animateLeviathans} from "./scripts/util";
 import "./styles/index.scss";
-
-
-// import cursorPng from "./images/cursor.png"
-
 
 import {
     drawResourcesText,
@@ -51,15 +46,17 @@ document.addEventListener("DOMContentLoaded", () =>  {
 
     const canvasHome = document.getElementById("canvas-home");
     const context = canvasHome.getContext('2d')
+    const menuContainer = document.getElementsByClassName("drop-down-container")[0]
     const youWin = document.getElementsByClassName("youwin")[0]
     const youLose = document.getElementsByClassName("youlose")[0]
+
 
     
 
     canvasEvents(canvasHome, context)
     drawGrass(context)
 
-    // leviathan(context, filePath, cx, cy, scaleW, scaleH){
+
     const leviathanArr = [];
     let leviCx = 100;
     let leviCy = 0;
@@ -82,10 +79,10 @@ document.addEventListener("DOMContentLoaded", () =>  {
     // const blankLeft = new progressBar(context, -34, 125, "blank", "v")
     // pre resize
     // const blankLeft = new progressBar(context, -34, 115, "blank", "v");
+    // const blankRight = new progressBar(context, 590, 115, "blank", "v");
     
     
     const blankLeft = new progressBar(context, -31, 115, "blank", "v");
-    // const blankRight = new progressBar(context, 590, 115, "blank", "v");
     const blankRight = new progressBar(context, 612, 115, "blank", "v");
     // debugger
     drawMidline(context)
@@ -114,84 +111,49 @@ document.addEventListener("DOMContentLoaded", () =>  {
             clearAlienText(context)
             clearInterval(makeCountdownId)
             clearInterval(drawResourcesTextId)
-            canvasHome.removeEventListener("mouseover", showDeets)
+
+            // remove mousedown event listener for canvas.
+            canvasHome.removeEventListener("mousedown", _listener)
+
+
+            // hide the buildings menu
+            if(!Array.from(menuContainer.classList).includes("hidden")){
+                menuContainer.classList.toggle("hidden")
+
+            }
 
             summonAliens(context)
 
             setTimeout(() =>{
-                if(getPoints("community") < getPoints()){
+                // player loses the game
+                if(getPoints("community") <= getPoints()){
                     animateSquares(chicken,context)
                     setTimeout(() => {
                         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
                         animateLeviathans(context, ...leviathanArr)
-                        setTimeout( () => drawLightning(fullLightning, context), 3000)
+                        setTimeout( () =>{
+                             drawLightning(fullLightning, context)
+                             setTimeout(()=> {
+                                 youLose.classList.toggle("hidden")
+                                //  setTimeout(() => window.location.reload(), 10000)
+                                }, 1500)
+                             
+                            }, 3000)
                     },2000)
+                } else{
+                    //player wins the game
+                    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+                    animateLeviathans(context, ...leviathanArr)
+                    setTimeout( () =>{
+                        youWin.classList.toggle("hidden")
+                        // setTimeout(() => window.location.reload(), 10000)
+                            }, 4000)
                 }
             },2500)
         }
     },1000)
 
-    
-
-    
-    // spawnResources();
-    // drawResourcesText(context);
-
-
-
-
-    // const greenBar = new progressBar(context, -34, 105, "green", "v", 10);
-    // const blueBar = new progressBar(context, 590, 105, "blue", "v", 20);
-    // const redBar = new progressBar(context, -34, 375, "blue", "v")
-
-    // const greenBar = new progressBar(context, -34, 105, "green", "v", 90);
-
-    // greenBar.increaseFill(100)
-
-    // const yellowBar = new progressBar(context, 590, 375, "yellow", "v")
-
-    //start points
-    // const yellowBar = new progressBar(context, 590, 445, "yellow", "v")
-    // const blueBar = new progressBar(context, 590, 105, "blue", "v", 20);
-    // productionBar.drawBar(context)
-    // productionBar.blankSprite.onload = () => {
-    //     
-    //     context.drawImage(productionBar.blankSprite, productionBar.startX, productionBar.startY);
-    //     context.drawImage(productionBar.colorSprite, productionBar.startX, productionBar.startY);
-    // }
-    // productionBar.increaseFill()
-    // progressBar(context, 626, 476, "blue")
-
-    // imgTest.onload = () => {
-
-        // for(let i = 0; i < 7; i++){
-        //     for(let j = 0; j < 7; j++){
-                // drawOnGrid(imgTest, i, j)
-                // animateSquares(imgTest)
-
-
-        //     }
-        // }
-        // drawOnGrid(imgTest, 6)
-    // }
-
-    
-
-
 })
 
-
-
-
-
-   
-// const leviatathanID = setInterval( () => {
-//       let isStatic = levis.some(levi => {
-//           console.log(levi.drawSpin(), "indexjs")
-//       })
-//       console.log(`${++num}, ${isStatic}`)
-//       if(isStatic) clearInterval(leviatathanID)
-
-//     },50)
 
 

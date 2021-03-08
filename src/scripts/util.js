@@ -4,7 +4,7 @@ export const buildAssetPath = (imgSrc) => {
 
 export const animateLeviathans = (context, ...levis) => {
     const leviatathanID = setInterval( () => {
-      let isStatic = levis.some((levi,idx) => {
+      let isStatic = levis.some(levi => {
 
         while (isStatic === undefined){
             return levi.drawSpin(leviatathanID)
@@ -21,22 +21,3 @@ export const animateLeviathans = (context, ...levis) => {
 }
 
 
-
-//  const leviatathanID = setInterval( () => {
-//       let isStatic = levis.forEach((levi,idx) => {
-//         //   console.log("levi", idx)
-//           console.log(`${++num}, ${isStatic}`)
-//           if(num === 289){
-//         //       debugger
-//               okToClearCanvas = true
-//               levi.drawSpin(leviatathanID, okToClearCanvas)
-//         //       levi.drawSpin(leviatathanID, okToClearCanvas)
-//         //       okToClearCanvas = false
-//           }
-//           if(num < 289){
-//               levi.drawSpin(leviatathanID, false)
-//           }else {
-//               okToClearCanvas = true
-//               levi.drawSpin(leviatathanID, okToClearCanvas)
-//           }
-//       })

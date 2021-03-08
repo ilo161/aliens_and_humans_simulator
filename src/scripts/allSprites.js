@@ -20,8 +20,6 @@ import tree1 from "../images/community/trees/01mighty_tree.png";
 import tree2 from "../images/community/trees/02tree_of_light.png";
 
 
-
-
 //Production
 
 import biz0 from "../images/production/business/00merchant_tent.png";

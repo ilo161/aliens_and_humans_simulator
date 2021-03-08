@@ -15,7 +15,7 @@ import grassD from "../images/terrain_grass/grass_mix_d.jpg"
 import cursorPng from "../images/cursor.png"
 
 
-
+export let _listener = undefined;
 // //ex: [3,4]
 let currentGrid = undefined;
 let previousGrid = undefined;
@@ -75,7 +75,6 @@ const civilization = {
                     {file: buildAssetPath(allSprites["ruin2"]), name:"Stone of Light", boost: 30, cORp: "community", klass:"ruins", index:2 }
 
                 ],
-                
                 trees:[
                     {file: buildAssetPath(allSprites["tree0"]), name:"Small Tree", boost: 10, cORp: "community", klass:"trees", index:0 },
                     {file: buildAssetPath(allSprites["tree1"]), name:"Mighty Tree", boost: 20, cORp: "community", klass:"trees", index:1 },
@@ -83,7 +82,6 @@ const civilization = {
                 ]
                 },
         production: {
-                farms: [],
                 business: [
                     {file: buildAssetPath(allSprites["biz0"]), name:"Fruit Stand", boost: 15, cORp: "production", klass:"business", index:0 },
                     {file: buildAssetPath(allSprites["biz1"]), name:"Mall", boost: 25, cORp: "production", klass:"business", index:1 },
@@ -111,7 +109,7 @@ const civilization = {
                      {file: buildAssetPath(allSprites["weapon0"]), name:"Defense Missle", boost: 15, cORp: "production", klass:"weapons", index:0 },
                      {file: buildAssetPath(allSprites["weapon1"]), name:"Attack Missle", boost: 25, cORp: "production", klass:"weapons", index:1 },
                      {file: buildAssetPath(allSprites["weapon2"]), name:"Mind Control", boost: 35, cORp: "production", klass:"weapons", index:2 }
-                ],
+                ]
                   
         }
 }
@@ -127,113 +125,22 @@ export const canvasEvents = (canvasHome, context) => {
     const playerAlert = document.getElementsByClassName("playerAlert")[0]
     const playerAlert2 = document.getElementsByClassName("playerAlert2")[0]
     
-    //When user clicks on grid it sets currentGrid. If they click outside, it returns
-    // undefined
-    canvasHome.addEventListener('mouseover', showDeets)
-    // canvasHome.addEventListener('mousedown',(e) => handleMouseDown(e, canvasHome, context, 
-    //     menuContainer, playerAlert, playerAlert2))
-
-    canvasHome.addEventListener('mousedown', (e) => {
-
-        currentGrid = getCoords(e);
-
-        // Menu is hidden . Therefore show the dropdown menu
-        if(currentGrid && Array.from(menuContainer.classList).includes("hidden")){
-            const x = currentGrid[0];
-            const y = currentGrid[1];
-
-            //show dropdown if user clicks in playgrid
-            menuContainer.classList.toggle("hidden")
-
-            // const len = menu.options.length;
-            // menu.setAttribute('size', len);
-
-            if(!isGridOccupied()){
-                removePlayerAlert(playerAlert)
-                previousGrid = currentGrid
-                console.log("previous grid", previousGrid)
-                //draw crosshair
-                drawOnGrid(cursor, context, x, y)
-            } else {
-                removePlayerAlert(playerAlert)
-                const currBuild = onPlayerGrid[x][y]
-                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
-            }
-
-        } else if(currentGrid && !Array.from(menuContainer.classList).includes("hidden")){
-            // Menu is not hidden, Game is Playable
-            // Draw cursor options below
-            if(!isGridOccupied()){
-                removePlayerAlert(playerAlert)
-                removePlayerAlert(playerAlert2)
-                const x = currentGrid[0];
-                const y = currentGrid[1];
-
-                if(previousGrid !== undefined){
-                    const prevX = previousGrid[0];
-                    const prevY = previousGrid[1];
-                    
-                    //remove crosshair cursor iff the previous grid wasn't built on.
-                    if (onPlayerGrid[prevX][prevY].isPresent === false){
-                        drawOnGrid(grassSquare, context, prevX, prevY, true)
-                    }
-                }
-
-                //remove crosshair cursor iff the previous grid wasn't built on.
-                // draw new crosshair
-                previousGrid = currentGrid
-                drawOnGrid(cursor, context, x, y)
-                console.log("CORRECT")
-            } else {
-                removePlayerAlert(playerAlert)
-                removePlayerAlert(playerAlert2)
-                const x = currentGrid[0];
-                const y = currentGrid[1];
-
-                if(previousGrid !== undefined){
-                    const prevX = previousGrid[0];
-                    const prevY = previousGrid[1];
-                
-                    //remove crosshair cursor iff the previous grid wasn't built on.
-                    // if(!isGridOccupied(prevX, prevY)){
-                    if(onPlayerGrid[prevX][prevY].isPresent === false){
-                        drawOnGrid(grassSquare, context, prevX, prevY, true)
-                    }
-                }
-                const currBuild = onPlayerGrid[x][y]
-                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
-            }
-        } else if (currentGrid === undefined && !Array.from(menuContainer.classList).includes("hidden")) {
-            removePlayerAlert(playerAlert)
-            removePlayerAlert(playerAlert2)
-
-            if(previousGrid !== undefined){
-                const prevX = previousGrid[0];
-                const prevY = previousGrid[1];
-            
-                //remove crosshair cursor
-                if(onPlayerGrid[prevX][prevY].isPresent === false){
-                    drawOnGrid(grassSquare, context, prevX, prevY, true)
-                }
-            }
-            
-            previousGrid = undefined;
-
-            //hide dropdown if user clicks outside play grid            
-            menuContainer.classList.toggle("hidden")
-
-        } 
-        console.log(`currentGrid: ${currentGrid}`)
-        console.log(`previousGrid: ${previousGrid}`)
+    // this is the "anonymous function" given to canvasHome as an event listener 
+    // variable is made to allow it to be removed later
+     _listener = function(e) {
+        handleMouseDown(e, canvasHome, context, 
+        menuContainer, menu, playerAlert, playerAlert2)
+    }
     
-    })
-
-
+    canvasHome.addEventListener('mousedown', _listener)
+   
     if ( /Android|webOS|iPhone|iPod|Blackberry|Windows Phone/i.test(navigator.userAgent)){
        onMobile = true;
     }
+    
+    
     // When user selects from the drop down menu to place a sprite
-    menu.addEventListener('click', (e) => {
+    menu.addEventListener(onMobile === false ? "click" : "change", (e) => {
         // Remove error message if there is one
         removePlayerAlert(playerAlert)
         removePlayerAlert(playerAlert2)
@@ -262,7 +169,7 @@ export const canvasEvents = (canvasHome, context) => {
             return false;
         }
 
-        console.log("resources",playerPoints.resources)
+        // console.log("resources",playerPoints.resources)
         
         
         // minimum purchase price required
@@ -284,11 +191,11 @@ export const canvasEvents = (canvasHome, context) => {
         // handle all the error cases with verifyBuildingMatch FN
         const okToRender = verifyBuildingMatch(choiceStr, menu)
         if (!okToRender){
-            console.log("choiceStr", choiceStr)
-            console.log("can't draw")
+            // console.log("choiceStr", choiceStr)
+            // console.log("can't draw")
             menu.disabled = false;
             if(onMobile){
-                playerAlert.appendChild(generateAlert("On Mobile"))
+                // playerAlert.appendChild(generateAlert("On Mobile"))
                 menu.selectedIndex = null
             }
             return false;
@@ -313,8 +220,7 @@ export const canvasEvents = (canvasHome, context) => {
 
                 playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
                 
-
-                console.log("PAY UP")
+                // console.log("PAY UP")
                 adjustResources(-20)
 
                 playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
@@ -334,7 +240,7 @@ export const canvasEvents = (canvasHome, context) => {
              if (chosenBuilding.index === (objAtGridPos.level + 1)){
                 // player upgrades appropriately by 1 level
                 //re-render grass first && remove previous building
-                console.log("DRAW!!!")
+                // console.log("DRAW!!!")
                 drawOnGrid(grassSquare, context, x, y, true)
                 
                 parseImage(context, filePathBuild, currentGrid)
@@ -350,9 +256,7 @@ export const canvasEvents = (canvasHome, context) => {
                   playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
                 }
 
-
-                //  occupyGrid(chosenBuilding)
-                console.log("PAY UP")
+                // console.log("PAY UP")
                 adjustResources(-20)
                 playerPoints[chosenBuilding.cORp] += chosenBuilding.boost
                 drawPointsText(context, chosenBuilding.cORp)
@@ -364,13 +268,13 @@ export const canvasEvents = (canvasHome, context) => {
 
 
         // reset default of dropdown
-            console.log("GO FALSE!")
+            // console.log("GO FALSE!")
             menu.disabled = false
             if(onMobile){
-                playerAlert.appendChild(generateAlert("On Mobile"))
+                // playerAlert.appendChild(generateAlert("On Mobile"))
                 menu.selectedIndex = null
             }
-            console.log("playerpoints", playerPoints)
+            // console.log("playerpoints", playerPoints)
 
 
 
@@ -429,19 +333,141 @@ export const canvasEvents = (canvasHome, context) => {
         return true
     }
 
-    // Alert System
-    const removePlayerAlert = (alertType) => {
-        const thisMany = alertType.childElementCount
+}
 
-        if (thisMany > 0){
-            alertType.removeChild(alertType.childNodes[0]); 
+export const handleMouseDown = (e, canvasHome, context, menuContainer, menu, playerAlert, playerAlert2) => {
+    currentGrid = getCoords(e, canvasHome);
+
+        // Menu is hidden . Therefore show the dropdown menu
+        if(currentGrid && Array.from(menuContainer.classList).includes("hidden")){
+            const x = currentGrid[0];
+            const y = currentGrid[1];
+
+            //show dropdown if user clicks in playgrid
+            menuContainer.classList.toggle("hidden")
+
+            //expand the dropdown
+            const len = menu.options.length;
+            menu.setAttribute('size', len);
+
+            if(!isGridOccupied()){
+                removePlayerAlert(playerAlert)
+                previousGrid = currentGrid
+                // console.log("previous grid", previousGrid)
+                //draw crosshair
+                drawOnGrid(cursor, context, x, y)
+            } else {
+                removePlayerAlert(playerAlert)
+                const currBuild = onPlayerGrid[x][y]
+                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+            }
+
+        } else if(currentGrid && !Array.from(menuContainer.classList).includes("hidden")){
+            // Menu is not hidden, Game is Playable
+            // Draw cursor options below
+            if(!isGridOccupied()){
+                removePlayerAlert(playerAlert)
+                removePlayerAlert(playerAlert2)
+                const x = currentGrid[0];
+                const y = currentGrid[1];
+
+                if(previousGrid !== undefined){
+                    const prevX = previousGrid[0];
+                    const prevY = previousGrid[1];
+                    
+                    //remove crosshair cursor iff the previous grid wasn't built on.
+                    // if(!isGridOccupied(prevX, prevY)){
+                    if (onPlayerGrid[prevX][prevY].isPresent === false){
+                        drawOnGrid(grassSquare, context, prevX, prevY, true)
+                    }
+                }
+
+                //remove crosshair cursor iff the previous grid wasn't built on.
+                // draw new crosshair
+                previousGrid = currentGrid
+                drawOnGrid(cursor, context, x, y)
+            } else {
+                removePlayerAlert(playerAlert)
+                removePlayerAlert(playerAlert2)
+                const x = currentGrid[0];
+                const y = currentGrid[1];
+
+                if(previousGrid !== undefined){
+                    const prevX = previousGrid[0];
+                    const prevY = previousGrid[1];
+                
+                    //remove crosshair cursor iff the previous grid wasn't built on.
+                    // if(!isGridOccupied(prevX, prevY)){
+                    if(onPlayerGrid[prevX][prevY].isPresent === false){
+                        drawOnGrid(grassSquare, context, prevX, prevY, true)
+                    }
+                }
+                const currBuild = onPlayerGrid[x][y]
+                playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
+            }
+        } else if (currentGrid === undefined && !Array.from(menuContainer.classList).includes("hidden")) {
+            removePlayerAlert(playerAlert)
+            removePlayerAlert(playerAlert2)
+
+            if(previousGrid !== undefined){
+                const prevX = previousGrid[0];
+                const prevY = previousGrid[1];
+            
+                //remove crosshair cursor
+                if(onPlayerGrid[prevX][prevY].isPresent === false){
+                    drawOnGrid(grassSquare, context, prevX, prevY, true)
+                }
+            }
+            
+            previousGrid = undefined;
+
+            //hide dropdown if user clicks outside play grid            
+            menuContainer.classList.toggle("hidden")
+
+        } 
+        // console.log(`currentGrid: ${currentGrid}`)
+        // console.log(`previousGrid: ${previousGrid}`)
+}
+
+const getCoords = (e, canvasHome) => {
+        let canvasRect = canvasHome.getBoundingClientRect();
+        let cx;
+        let cy;
+        let px = e.pageX;
+        let py = e.pageY;
+
+        // console.log("-------")
+        // console.log("px", px)
+        // console.log("py", py)
+
+        cx = px - canvasRect.left
+        cy = py - canvasRect.top
+        // console.log(canvasRect)
+
+        // console.log("-------")
+        // console.log("cx", cx)
+        // console.log("cy",cy)
+        // const col = Math.floor((cx - 22) / 86) ;
+        // const row = Math.floor((cy - 131) / 86) ;
+
+        const col = Math.floor((cx - 49) / 86) ;
+        const row = Math.floor((cy - 138) / 86) ;
+
+        // current location console.log
+        // console.log(`X: [${row}, Y: ${col}]`)
+
+        //did click on game grid
+        if (row >= 0 && row <= 3 && col >= 0 && col <= 6){
+            return [row,col]
         }
-        
-        
-         
-    }
+        //did NOT click on game grid
+        else {
+            return undefined
+        }
+            
+}
 
-    // x is a row and goes top -> down
+// x is a row and goes top -> down
     const gridDecoderX = {
         0: "A",
         1: "B",
@@ -459,20 +485,9 @@ export const canvasEvents = (canvasHome, context) => {
         6: "7",
     }
 
-    const generateCurrSelText = (justBuilt) => {
-        const x = gridDecoderX[currentGrid[0]]
-        const y = gridDecoderY[currentGrid[1]]
-
-        let str = `Current Selection: ${justBuilt.name} ; @ [${x},${y}].`
-
-        return str
-    }
-
-    const generateAlert = (msg, isErrorMsg = true) => {
+const generateAlert = (msg, isErrorMsg = true) => {
         // Add message to the DOM -> "That building is already there. Try upgrading!"
         const ele = document.createElement('span');
-        
-
         
         if(isErrorMsg){
             const text = document.createTextNode(msg); 
@@ -496,210 +511,25 @@ export const canvasEvents = (canvasHome, context) => {
         }
 
         
-    }
-
-    // menuContainer.classList.toggle("shrink")
-    // 
-    // menuContainer.classList.toggle("hidden")
-
-
-    
-    // console.log(canvasRect)
-   
-
-    // function onDown(e){
-    //         cx = e.pageX;
-    //         cy = e.pageY;
-    //     // console.log(`X: ${cx}, Y: ${cy}`)
-    // }
-    
-    const getCoords = (e) => {
-        let canvasRect = canvasHome.getBoundingClientRect();
-        let cx;
-        let cy;
-        let px = e.pageX;
-        let py = e.pageY;
-
-        console.log("-------")
-        console.log("px", px)
-        console.log("py", py)
-
-        cx = px - canvasRect.left
-        cy = py - canvasRect.top
-        console.log(canvasRect)
-
-        console.log("-------")
-        console.log("cx", cx)
-        console.log("cy",cy)
-        // const col = Math.floor((cx - 22) / 86) ;
-        // const row = Math.floor((cy - 131) / 86) ;
-
-        const col = Math.floor((cx - 49) / 86) ;
-        const row = Math.floor((cy - 138) / 86) ;
-
-        // current location console.log
-        console.log(`X: [${row}, Y: ${col}]`)
-
-        //did click on game grid
-        if (row >= 0 && row <= 3 && col >= 0 && col <= 6){
-            return [row,col]
-        }
-        //did NOT click on game grid
-        else {
-            return undefined
-        }
-            
-    }
-
-
 }
-// e, canvasHome, context, 
-//         menuContainer, playerAlert, playerAlert2))
 
-// export const handleMouseDown = (e, canvasHome, context, menuContainer, playerAlert, playerAlert2) => {
-//     currentGrid = getCoords(e, canvasHome);
+const generateCurrSelText = (justBuilt) => {
+        const x = gridDecoderX[currentGrid[0]]
+        const y = gridDecoderY[currentGrid[1]]
 
-//         // Menu is hidden . Therefore show the dropdown menu
-//         if(currentGrid && Array.from(menuContainer.classList).includes("hidden")){
-//             const x = currentGrid[0];
-//             const y = currentGrid[1];
+        let str = `Current Selection: ${justBuilt.name} ; @ [${x},${y}]`
 
-//             //show dropdown if user clicks in playgrid
-//             menuContainer.classList.toggle("hidden")
-//             debugger
+        return str
+}
 
-//             // const len = menu.options.length;
-//             // menu.setAttribute('size', len);
+const removePlayerAlert = (alertType) => {
+    const thisMany = alertType.childElementCount
 
-//             if(!isGridOccupied()){
-//                 removePlayerAlert(playerAlert)
-//                 previousGrid = currentGrid
-//                 console.log("previous grid", previousGrid)
-//                 //draw crosshair
-//                 drawOnGrid(cursor, context, x, y)
-//             } else {
-//                 removePlayerAlert(playerAlert)
-//                 const currBuild = onPlayerGrid[x][y]
-//                 playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
-//             }
-
-//         } else if(currentGrid && !Array.from(menuContainer.classList).includes("hidden")){
-//             // Menu is not hidden, Game is Playable
-//             // Draw cursor options below
-//             if(!isGridOccupied()){
-//                 removePlayerAlert(playerAlert)
-//                 removePlayerAlert(playerAlert2)
-//                 const x = currentGrid[0];
-//                 const y = currentGrid[1];
-
-//                 if(previousGrid !== undefined){
-//                     const prevX = previousGrid[0];
-//                     const prevY = previousGrid[1];
-                    
-//                     //remove crosshair cursor iff the previous grid wasn't built on.
-//                     // if(!isGridOccupied(prevX, prevY)){
-//                     if (onPlayerGrid[prevX][prevY].isPresent === false){
-//                         drawOnGrid(grassSquare, context, prevX, prevY, true)
-//                     }
-//                 }
-
-//                 //remove crosshair cursor iff the previous grid wasn't built on.
-//                 // draw new crosshair
-//                 previousGrid = currentGrid
-//                 drawOnGrid(cursor, context, x, y)
-//                 console.log("CORRECT")
-//             } else {
-//                 removePlayerAlert(playerAlert)
-//                 removePlayerAlert(playerAlert2)
-//                 const x = currentGrid[0];
-//                 const y = currentGrid[1];
-
-//                 if(previousGrid !== undefined){
-//                     const prevX = previousGrid[0];
-//                     const prevY = previousGrid[1];
-                
-//                     //remove crosshair cursor iff the previous grid wasn't built on.
-//                     // if(!isGridOccupied(prevX, prevY)){
-//                     if(onPlayerGrid[prevX][prevY].isPresent === false){
-//                         drawOnGrid(grassSquare, context, prevX, prevY, true)
-//                     }
-//                 }
-//                 debugger
-//                 const currBuild = onPlayerGrid[x][y]
-//                 playerAlert2.appendChild(generateAlert(generateCurrSelText(currBuild), false))
-//             }
-//         } else if (currentGrid === undefined && !Array.from(menuContainer.classList).includes("hidden")) {
-//             removePlayerAlert(playerAlert)
-//             removePlayerAlert(playerAlert2)
-
-//             if(previousGrid !== undefined){
-//                 const prevX = previousGrid[0];
-//                 const prevY = previousGrid[1];
-            
-//                 //remove crosshair cursor
-//                 if(onPlayerGrid[prevX][prevY].isPresent === false){
-//                     drawOnGrid(grassSquare, context, prevX, prevY, true)
-//                 }
-//             }
-            
-//             previousGrid = undefined;
-
-//             //hide dropdown if user clicks outside play grid            
-//             menuContainer.classList.toggle("hidden")
-
-//         } 
-//         console.log(`currentGrid: ${currentGrid}`)
-//         console.log(`previousGrid: ${previousGrid}`)
-// }
-
-// const getCoords = (e, canvasHome) => {
-//         let canvasRect = canvasHome.getBoundingClientRect();
-//         let cx;
-//         let cy;
-//         let px = e.pageX;
-//         let py = e.pageY;
-
-//         console.log("-------")
-//         console.log("px", px)
-//         console.log("py", py)
-
-//         cx = px - canvasRect.left
-//         cy = py - canvasRect.top
-//         console.log(canvasRect)
-
-//         console.log("-------")
-//         console.log("cx", cx)
-//         console.log("cy",cy)
-//         // const col = Math.floor((cx - 22) / 86) ;
-//         // const row = Math.floor((cy - 131) / 86) ;
-
-//         const col = Math.floor((cx - 49) / 86) ;
-//         const row = Math.floor((cy - 138) / 86) ;
-
-//         // current location console.log
-//         console.log(`X: [${row}, Y: ${col}]`)
-
-//         //did click on game grid
-//         if (row >= 0 && row <= 3 && col >= 0 && col <= 6){
-//             return [row,col]
-//         }
-//         //did NOT click on game grid
-//         else {
-//             return undefined
-//         }
-            
-// }
-
-// const removePlayerAlert = (alertType) => {
-//         const thisMany = alertType.childElementCount
-
-//         if (thisMany > 0){
-//             alertType.removeChild(alertType.childNodes[0]); 
-//         }
-        
-        
+    if (thisMany > 0){
+        alertType.removeChild(alertType.childNodes[0]); 
+    }
          
-//     }
+}
 
 // selected argument is "production,houses,0"
 const civilizationMenuSelect = (selected) => {
@@ -708,7 +538,7 @@ const civilizationMenuSelect = (selected) => {
         let klass = null;
         let index = null;
         [cORp, klass, index] = optionsArr;
-        console.log("--")
+        // console.log("--")
         // console.log(optionsArr);
         // console.log(civilization[cORp][klass][index]);
 
@@ -793,7 +623,7 @@ const isInitialBuilding = (chosenBuilding) => {
     return false
 }
 
-// to be MOVED LATER *!*!*!*!*!*!!*!*!*!*!*!*!*!*
+
 export const summonAliens = (context) => {
     const motherShip = new MotherShip(context)
         motherShip.makeShips()
@@ -825,7 +655,7 @@ const parseImage = (context, filePath, currentGrid) =>{
 
 // FN will draw an image at the appropriate spot on the grid
 const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
-    console.log("draw on grid", gridX, gridY)
+    // console.log("draw on grid", gridX, gridY)
         // const offsetX = 22;
         const offsetY = 131;
         const offsetX = 44;
@@ -835,9 +665,7 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
         const topLeftY = 86;    
 
         if (gridX === 0 && gridY === 0) {
-            // context.drawImage(this.sprite, this.movements[this.moveIdx].x, this.movements[this.moveIdx].y, this.scaleW, this.scaleH )
-            //works and original func
-            // context.drawImage(image, offsetX, offsetY, image.width /11.9, image.height / 11.9 )
+    
             if (clearRectBoolean){
                 context.clearRect(offsetX, offsetY, 86, 86)
                 context.drawImage(image, offsetX, offsetY, 86, 86)
@@ -845,27 +673,16 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
                 context.drawImage(image, offsetX, offsetY, 86, 86 )
             }
         } else if (gridX === 0 && gridY > 0){
-            //original
-            // context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, image.width /11.9, image.height / 11.9 )
+
             if (clearRectBoolean){
-                
-                // context.clearRect(offsetX, offsetY, 86, 86)
-                // context.drawImage(image, offsetX, offsetY, 86, 86)
                 context.clearRect(((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86)
                 context.drawImage(image, ((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86 )
             } else {
                 context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, 86, 86 )
             }
         } else {
-            // 
-             //original
-            // context.drawImage(image, ((topLeftX * gridY) + offsetX), offsetY, image.width /11.9, image.height / 11.9 )
-            if (clearRectBoolean){
-                
-                //original
-                // context.clearRect(offsetX, offsetY, 86, 86)
-                // context.drawImage(image, offsetX, offsetY, 86, 86)
 
+            if (clearRectBoolean){
                 context.clearRect(((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86)
                 context.drawImage(image, ((topLeftX * gridY) + offsetX), ((topLeftY * gridX) + offsetY), 86, 86 )
             } else {
@@ -874,40 +691,28 @@ const drawOnGrid = (image, context, gridX, gridY, clearRectBoolean) => {
         }
 
     
-    }
-
-    export const animateSquares = (image, context) => {
-        context.clearRect(44, 131, 602, 344)
-        for(let i = 0; i < 4; i++){
-            for(let j = 0; j < 7; j++){
-                drawOnGrid(grassSquare, context, i, j)
-                drawOnGrid(image, context, i, j)
-                
-            }
-        }
-
-    }
-
-    export const drawLightning = (image, context) => {
-        context.drawImage(image, 0, 0, context.canvas.width, context.canvas.height)
-    }
-
-    // export const loadAlienShip = () => {
-    //     // const alienSrc = "/src/images/aliens/ships/08-Netuno.png";
-    //     // const alienShip = new Image();
-    //     // alienShip.src = alienSrc;
-
-    //     // alienShip.onload( () => {
-    //     //     return true
-    //     // })
-
-    // }
-
-export const showDeets = () => {
-    console.log("THE DEETS")
 }
 
-// export default canvasEvents;
+export const animateSquares = (image, context) => {
+    context.clearRect(44, 131, 602, 344)
+    for(let i = 0; i < 4; i++){
+        for(let j = 0; j < 7; j++){
+            drawOnGrid(grassSquare, context, i, j)
+            drawOnGrid(image, context, i, j)
+            
+        }
+    }
+
+}
+
+export const drawLightning = (image, context) => {
+    context.drawImage(image, 0, 0, context.canvas.width, context.canvas.height)
+}
+
+
+
+
+
 
 
 

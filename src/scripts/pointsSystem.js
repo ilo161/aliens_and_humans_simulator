@@ -5,7 +5,7 @@ export const playerPoints = {
     community: 0,
     production: 0,
     resources: 500,
-    alienTimer: 140
+    alienTimer: 30
 }
 
 // cORp stands for community or production
@@ -50,7 +50,6 @@ export const adjustPoints = (points, context, style = "community") => {
 
     if (style === "community"){
         //save to variable because garbage collection
-        // debugger
         // const greenBar = new progressBar(context, -34, 105, "green", "v", fillPercentage);
         const greenBar = new progressBar(context, -31, 105, "green", "v", fillPercentage);
     } else {
@@ -64,12 +63,10 @@ export const spawnResources = () => {
 }
 
 export const adjustResources = (num) => {
-    // debugger
     playerPoints.resources += num;
 }
 
 export const adjustTimer = (num) => {
-    // debugger
     playerPoints.alienTimer += num;
 }
 
@@ -88,7 +85,6 @@ export const getPoints = (cORp) => {
 
 export const clearAlienText = (context) => {
     const startX = ((context.canvas.width / 2) - 116);
-    // context.clearRect(startX, 30, 250, 80)
     context.clearRect(startX, 0, 275, 80)
 }
 
@@ -97,7 +93,6 @@ export const drawMidline = (context) => {
     const startX = ((context.canvas.width / 2))
     context.font = 'bold 30px Sans-Serif';
     context.fillStyle = "#66A1E7"
-    // context.strokeStyle = "#C5E0CF";
     context.strokeStyle = "#55906F";
     context.fillText("|", startX, 10);
     context.strokeText("|", startX, 10);
@@ -107,13 +102,12 @@ export const drawAlienCountdown = (context) => {
     const halfWidth = context.canvas.width / 2
     const startX = ((context.canvas.width / 2) - 116);
    
-    // context.clearRect(halfWidth-10, 35, (halfWidth-10 + 60), 65)
     context.clearRect(startX, 0, 275, 80)
 
     context.font = 'bold 30px Sans-Serif';
     context.fillStyle = "#000"
     context.strokeStyle = "#FFF";
-    // context.strokeStyle = "#55906F";
+
     context.fillText("Aliens are coming!", startX, 30);
     context.strokeText("Aliens are coming!", startX, 30);
      
@@ -125,18 +119,15 @@ export const drawAlienCountdown = (context) => {
 export const drawResourcesText = (context) => {
     const startX = ((context.canvas.width / 2) - 108);
     const startY = 522;
-    // context.clearRect(startX, 478, (startX + 350), 30)
+
     context.clearRect(startX, 500, 260, 30)
 
     context.font = 'bold 30px Sans-Serif';
     context.fillStyle = "#000"
     context.strokeStyle = "#FFF";
-    // context.strokeStyle = "#C5E0CF";
 
     context.fillText("Resources: " + playerPoints.resources, startX, startY);
     context.strokeText("Resources: " + playerPoints.resources, startX, startY);
-    // requestAnimationFrame(drawResourcesText(context))
-
   }
 
   export const drawPointsText = (context, cORp) => {
@@ -150,9 +141,8 @@ export const drawResourcesText = (context) => {
         context.font = 'bold 20px Sans-Serif';
         context.fillStyle = "#9efdff"
         context.strokeStyle = "#FFF";
-        // context.fillText(playerPoints.community + " community", startX, startY);
         context.fillText("community: " + playerPoints.community, startX, startY);
-        // context.strokeText(playerPoints.community + " community points", startX, startY);
+
     } else if(cORp === "production"){
         //Txt coords
         const startXTxt = context.canvas.width - 165
@@ -160,15 +150,14 @@ export const drawResourcesText = (context) => {
         // num coords
         const startXPts = context.canvas.width - 55
         const startYPts = startYTxt - 18;
-        // const clearStartHeight = startYTxt - 20;
+
         const clearStartHeight = startYTxt - 33;
         const clearHeight = context.canvas.height - clearStartHeight;
         context.clearRect(startXTxt, clearStartHeight, startXTxt, clearHeight);
         context.font = 'bold 20px Sans-Serif';
         context.fillStyle = "#FFF"
         context.strokeStyle = "#000";
-        // context.fillText(playerPoints.production + " production pts", startXTxt, startYTxt);
-        // context.fillText(playerPoints.production, startXPts, startYPts);
+        
         context.strokeText("production: " + playerPoints.production, startXTxt, startYTxt);
         context.fillText("production: " + playerPoints.production, startXTxt, startYTxt);
     } 

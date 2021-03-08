@@ -1,6 +1,3 @@
-// import {buildAssetPath} from "./util"
-console.log("LEVIATHAN!!!")
-
 class Leviathan {
     constructor(context, filePath, cx, cy, scaleW, scaleH){
         this.context = context;
@@ -60,16 +57,9 @@ class Leviathan {
                 //     console.log("SUCCESSFUL PROMISE", res)
                 //     return true
                 // });
-                // debugger
-                // if(okToClearCanvas){
-                //     debugger
-                //     console.log("ALL BLACK", okToClearCanvas)
-                //     this.context.fillStyle = "#000";
-                //     this.context.fillRect(0, 0, this.cWidth, this.cHeight);
-                // }
                 
 
-                // this.drawFacing(id)
+
             }
             if(this.index >= this.movements.length) {
                 this.index = 0;
@@ -81,8 +71,6 @@ class Leviathan {
 
 
     drawFacing(id){
-        // this.context.clearRect(0, 0, this.cWidth, this.cHeight);
-        // this.context.clearRect(this.cx, this.cy, this.scaleW, this.scaleH);
         this.context.drawImage(this.sprite, 
                 this.movements[0].sx, this.movements[0].sy,
                 this.movements[0].px, this.movements[0].py,
@@ -90,7 +78,7 @@ class Leviathan {
                 this.properties.width, this.properties.height
                 )
 
-                //with new Promise Solution
+            //with new Promise Solution
         // const promise = new Promise(function(resolve, reject) {
         //     setTimeout(() => {
         //     resolve(true);
