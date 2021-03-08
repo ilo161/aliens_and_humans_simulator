@@ -157,6 +157,72 @@ select{
     align-items: center;
 }
 
+.flex-col-start{
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-col-btwn{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.content-container #rules-wrapper{
+    background-image: url("../images/background/mtnsrules.png");
+    position: absolute;
+    height: 547px;
+    width:678px;
+    top: 0%;
+    left: 18%;
+    z-index: 2;
+    overflow-wrap: break-word;
+}
+
+    .dogtag{
+        margin: 10px auto;
+        width: min(444px);
+        background: linear-gradient(35deg, rgba(116,116,116,0.8) 100%,  rgba(255,255,255,0.8) 0%);
+        border-radius: 4px;
+        z-index: 3;
+
+    }
+
+    #sm-dogtag{
+        margin: 3px auto 0;
+        width: min(200px);
+        background: linear-gradient(35deg, rgba(116,116,116,0.8) 100%,  rgba(255,255,255,0.8) 0%);
+        border-radius: 4px;
+        z-index: 3;
+    }
+
+    #sm-dogtag:hover{
+        color: black;
+        font-weight: 800;
+        background: rgb(210,237,3);
+        background: linear-gradient(74deg, rgba(210,237,3,1) 0%, rgba(92,230,19,1) 100%);
+    }
+
+        .rules-content{
+            filter: blur(0);
+            z-index: 4;
+            padding: 8px;
+
+        }
+
+        .inline{
+            display:inline-block;
+            width: 25%;
+        }
+
+        .center{
+            margin: 0 auto;
+        }
+
+        .spacer{
+            margin: 10px 0;
+        }
+
 .hidden{
     display: none;
 }
@@ -184,4 +250,48 @@ select{
     top: 0%;
     left: 18%;
     z-index: 2;
+}
+
+.w-50{
+    width: 50%;
+}
+
+.w-80{
+    width: 80%
+}
+
+.pad-l-3{
+    padding-left: 3px;
+}
+
+.loud{
+    margin-top:2px;
+    font-size: 25px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.medium-voice{
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.m4-tb{
+    margin:4px 0 ;
+}
+
+.quiet-voice{
+    font-size: 14px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.neonblue{
+    color: rgba(158, 253, 255);
+}
+
+.neon-green{
+    color: rgb(14, 255, 6);
+}
+
+.white{
+    color:#FFF;
 }

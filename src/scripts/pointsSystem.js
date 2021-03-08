@@ -70,6 +70,15 @@ export const adjustTimer = (num) => {
     playerPoints.alienTimer += num;
 }
 
+export const freeResources = () => {
+    if(hasUsedCheatCode === false){
+        hasUsedCheatCode = true;
+        adjustResources(9999)
+    } else {
+        console.log("Let's not be greedy!")
+    }
+}
+
 export const setTimer = (num) => {
     playerPoints.alienTimer = num
 }
