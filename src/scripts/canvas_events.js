@@ -38,15 +38,15 @@ const onPlayerGrid = buildPlayerState()
 // This function builds an object containing all the coordinates of the play grid and 
 // stores state of what the player has played
 function buildPlayerState(){
-    let buildPlayerGrid = {}
-    for(let i = 0 ; i < 4; i++){
-        buildPlayerGrid[i] = {}
-        for(let j = 0; j < 7; j++){
+	let buildPlayerGrid = {}
+	for(let i = 0 ; i < 4; i++){
+			buildPlayerGrid[i] = {}
+			for(let j = 0; j < 7; j++){
 
-            buildPlayerGrid[i][j] = {isPresent: false, cORp: "", klass: "", level: null, name: ""}
-        }
-    }
-    return buildPlayerGrid
+				buildPlayerGrid[i][j] = {isPresent: false, cORp: "", klass: "", level: null, name: ""}
+			}
+	}
+	return buildPlayerGrid
 }
 
 
