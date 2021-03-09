@@ -4,7 +4,7 @@ import progressBar from "./progressBar.js"
 export const playerPoints = {
     community: 0,
     production: 0,
-    resources: 500,
+    resources: 600,
     alienTimer: 120
 }
 
@@ -80,7 +80,15 @@ export const freeResources = () => {
 }
 
 export const setTimer = (num) => {
-    playerPoints.alienTimer = num
+    if(num === undefined){
+        console.log("Enter a number inside the ( )")
+        return false;
+    } 
+    if(num > 500 || getTime() >= 500){
+        console.log("That game will never end")
+        return true
+    } 
+    playerPoints.alienTimer += num
 }
 
 export const getTime = () => {

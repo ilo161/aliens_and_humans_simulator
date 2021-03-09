@@ -134,7 +134,7 @@ export const canvasEvents = (canvasHome, context) => {
     
     canvasHome.addEventListener('mousedown', _listener)
    
-    if ( /Android|webOS|iPhone|iPod|Blackberry|Windows Phone/i.test(navigator.userAgent)){
+    if ( /Android|webOS|iPhone|iPod|iPad|Blackberry|Windows Phone/i.test(navigator.userAgent)){
        onMobile = true;
     }
     
@@ -552,7 +552,7 @@ export const drawGrass = (context) => {
         img1.src = buildAssetPath(grassD)
 
         img1.onload = () => {
-
+            
             drawRow(context, img1, 44, 131)
             drawRow(context, img1, 44, 217)
             drawRow(context, img1, 44, 303)

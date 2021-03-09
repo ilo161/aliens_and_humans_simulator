@@ -2,6 +2,10 @@ body{
     background-image: url("../images/background/wallpaper.png");
 }
 
+a{
+    text-decoration: none;
+}
+
 .master-container{
     text-align: center;
 }
@@ -123,6 +127,21 @@ select{
     height: auto;
 }
 
+    .my-links{
+        height: 224px;
+        width: 180px;
+    }
+
+.icon{
+    width: 50px;
+    height: 50px;
+}
+
+.badge{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .playerAlert{
     position: absolute;
     overflow-wrap: break-word;
@@ -168,6 +187,13 @@ select{
     justify-content: space-between;
 }
 
+.flex-col-center{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .content-container #rules-wrapper{
     background-image: url("../images/background/mtnsrules.png");
     position: absolute;
@@ -196,7 +222,23 @@ select{
         z-index: 3;
     }
 
+
     #sm-dogtag:hover{
+        color: black;
+        font-weight: 800;
+        background: rgb(210,237,3);
+        background: linear-gradient(74deg, rgba(210,237,3,1) 0%, rgba(92,230,19,1) 100%);
+    }
+
+    #xs-dogtag{
+        margin: 3px auto 0;
+        width: min(150px);
+        background: linear-gradient(35deg, rgba(116,116,116,0.8) 100%,  rgba(255,255,255,0.8) 0%);
+        border-radius: 4px;
+
+    }
+
+    #xs-dogtag:hover{
         color: black;
         font-weight: 800;
         background: rgb(210,237,3);
